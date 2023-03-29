@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Task Creation Interface</title>
+    <link class="task" type="text/css" rel="stylesheet" href="../modules/pemFioi/progTask.css">
+    <link class="task" type="text/css" rel="stylesheet" href="../modules/ext/bootstrap/css/bootstrap.min.css">
+    <script class="remove" src="../modules/ext/requirejs/require.js"></script>
+    <script type="text/javascript">
+      var modulesPath ='../modules';
+      var taskPlatformPath ='../task-platform';
+    </script>
+    <script type="text/javascript" src="taskCreationConfig.js"></script>
+    <style type="text/css">
+      *[ng-cloak] { display: none !important; }
+      body {width: 800px; margin-left:auto;margin-right:auto;margin-top:30px;margin-bottom:30px;}
+    </style>
+  </head>
+<body ng-controller="taskCreationController" ng-cloak>
+
+    <!-- TODO: help message -->
+
+    <form name="mainForm" class="form-inline">
+      <div class="form-group">
+        <label for="path">Chemin de l'exercice</label>
+        <input type="text" class="form-control" name="path" ng-model="formData.path" style="width:600px;" />
+      </div>
+      <button ng-click="newTask()" class="btn btn-default">Nouvel exercice</button>
+      <button ng-click="loadTask()" class="btn btn-default">Charger l'exercice</button>
+      <button ng-click="saveTask()" class="btn btn-default">Sauvegarder l'exercice</button> 
+    </form>
+
+    <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+
+    <form name="taskForm" ng-if="tm_tasks_strings">
+      <div class="form-group">
+        <label for="title">Titre</label>
+        <input type="text" class="form-control" name="title" ng-model="tm_tasks_strings.sTitle" />
+      </div>
+      <div class="form-group">
+        <label for="statement">Énoncé (html)</label>
+        <textarea class="form-control" name="statement" ng-model="tm_tasks_strings.sStatement" ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="solution">Solution (html)</label>
+        <textarea class="form-control" name="solution" ng-model="tm_tasks_strings.sSolution" ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="bTestMode">Exercice de tests</label>
+        <input type="checkbox" name="bTestMode" ng-model="tm_task.bTestMode">
+      </div>
+      <div class="form-group">
+        <label for="bUserTests">L'utilisateur peut créer ses tests</label>
+        <input type="checkbox" name="bUserTests" ng-model="tm_task.bUserTests">
+      </div>
+      <div class="form-group" ng-if="!tm_task.bTestMode">
+        <label for="sSupportedLangProg">Langages supportés</label>
+        <select multiple class="form-control" name="sSupportedLangProg" ng-model="tm_task.aSupportedLangProg">
+          <option value="*" selected>Tous</option>
+          <option value="python">Python 3</option>
+          <option value="c">C</option>
+          <option value="cpp">C++</option>
+          <option value="java">Java</option>
+          <option value="jvs">Javascool</option>
+          <option value="ocaml">OCaml</option> 
+          <option value="php">PHP</option> 
+          <option value="pascal">Pascal</option> 
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sEvalResultOutputScript">Rendu de l'évaluation</label>
+        <select class="form-control" name="sEvalResultOutputScript"  ng-model="tm_task.sEvalResultOutputScript">
+          <option value="" selected>Par défaut</option>
+          <option value="image-1.0">Image</option>
+        </select>
+      </div>
+
+      <h3>Indices</h3>
+
+      <div ng-repeat="hint in tm_task.hints">
+        <div class="form-group">
+          <label for="solution">Conseil {{hint.iRank}}</label>
+          <textarea class="form-control" name="solution" ng-model="hint.strings[0].sContent" ></textarea>
+        </div>
+      </div>
+      <button ng-click="newHint()" class="btn btn-default">Nouvel Indice</button>
+
+      <h3>Limites</h3>
+
+      <div ng-repeat="limit in tm_task.limits" class="form-inline">
+        <div class="form-group">
+          <label for="language">Langage</label>
+          <select class="form-control" name="language" ng-model="limit.sLangProg">
+            <option value="*" selected>Tous</option>
+            <option value="python">Python 3</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="jvs">Javascool</option>
+            <option value="ocaml">OCaml</option> 
+            <option value="php">PHP</option> 
+            <option value="pascal">Pascal</option> 
+          </select>
+        <div class="form-group">
+        </div>
+          <label for="language">Temps max (ms)</label>
+          <input class="form-control" name="maxTime" ng-model="limit.iMaxTime"  style="width: 100px;"/>
+        <div class="form-group">
+        </div>
+          <label for="language">Mémoire max (kb)</label>
+          <input class="form-control" name="maxMemory" ng-model="limit.iMaxMemory"  style="width: 100px;"/>
+        </div>
+      </div>
+      <button ng-click="newLimit()" class="btn btn-default">Nouvelle limite</button>
+    </form>
+
+
+    <iframe style="width:1px;height:1px;" id="taskIframe" src=""></iframe>
+
+  </body>
+</html>

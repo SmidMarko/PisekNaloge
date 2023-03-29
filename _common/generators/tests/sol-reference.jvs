@@ -1,0 +1,5 @@
+void main()
+{
+   int nb = readInt();
+   println(nb * nb);
+}

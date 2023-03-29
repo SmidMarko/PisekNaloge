@@ -1,0 +1,7 @@
+Creation of the test tests/gen-example.001.in
+Checking test file tests/gen-example.001.in
+ERROR, invalid test file tests/gen-example.001.in : 
+[Lig   1, Col   1] ERROR: '
+...' is not the beginning of an integer
+
+Generation of the .out for tests/gen-example.001.in

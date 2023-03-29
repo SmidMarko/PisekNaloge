@@ -1,0 +1,63 @@
+Creation of the test tests/gen-big-000000001.001.in
+Creation of the test tests/gen-big-000000002.002.in
+Creation of the test tests/gen-big-000000003.003.in
+Creation of the test tests/gen-big-000000004.004.in
+Creation of the test tests/gen-big-000000005.005.in
+Creation of the test tests/gen-big-000000006.006.in
+Creation of the test tests/gen-big-000000007.007.in
+Creation of the test tests/gen-big-000000008.008.in
+Creation of the test tests/gen-big-000000009.009.in
+Checking test file tests/gen-big-000000001.001.in
+ERROR, invalid test file tests/gen-big-000000001.001.in : 
+[Lig   1, Col   2] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000002.002.in
+ERROR, invalid test file tests/gen-big-000000002.002.in : 
+[Lig   1, Col   2] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000003.003.in
+ERROR, invalid test file tests/gen-big-000000003.003.in : 
+[Lig   1, Col   2] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000004.004.in
+ERROR, invalid test file tests/gen-big-000000004.004.in : 
+[Lig   1, Col   2] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000005.005.in
+ERROR, invalid test file tests/gen-big-000000005.005.in : 
+[Lig   1, Col   3] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000006.006.in
+ERROR, invalid test file tests/gen-big-000000006.006.in : 
+[Lig   1, Col   3] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000007.007.in
+ERROR, invalid test file tests/gen-big-000000007.007.in : 
+[Lig   1, Col   3] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000008.008.in
+ERROR, invalid test file tests/gen-big-000000008.008.in : 
+[Lig   1, Col   3] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Checking test file tests/gen-big-000000009.009.in
+ERROR, invalid test file tests/gen-big-000000009.009.in : 
+[Lig   1, Col   3] ERROR: Wrong char : '\000' instead of '\010'
+ '
+
+Generation of the .out for tests/gen-big-000000001.001.in
+Generation of the .out for tests/gen-big-000000002.002.in
+Generation of the .out for tests/gen-big-000000003.003.in
+Generation of the .out for tests/gen-big-000000004.004.in
+Generation of the .out for tests/gen-big-000000005.005.in
+Generation of the .out for tests/gen-big-000000006.006.in
+Generation of the .out for tests/gen-big-000000007.007.in
+Generation of the .out for tests/gen-big-000000008.008.in
+Generation of the .out for tests/gen-big-000000009.009.in

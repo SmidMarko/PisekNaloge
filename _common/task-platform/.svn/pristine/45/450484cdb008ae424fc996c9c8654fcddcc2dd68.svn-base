@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+   <head>
+    <meta charset="utf-8">
+    <title>quickAlgo test display</title>
+      <script>
+      window.stringsLanguage = 'fr';
+      </script>
+      <script type="text/javascript" src="../bower_components/bebras-modules/pemFioi/importModules-1.1.js" id="import-modules"></script>
+      <script type="text/javascript">
+        var modulesPath = '../bower_components/bebras-modules/'
+        importModules([
+            'jquery-1.7.1', 'JSON-js', 'raphael-2.2.1', 'beaver-task-2.0', 'jschannel', 'raphaelFactory-1.0', 'delayFactory-1.0', 'simulationFactory-1.0',
+            'platform-pr', 'buttonsAndMessages', 'beav-1.0', 'installationAPI.01', 'conceptViewer-1.0', 'conceptViewer_css-1.0',
+            'taskStyles-0.1', 'blockly-printer2']);
+        window.taskInfo = window.parent.adapterApi.getTaskInfo();
+        importModules(taskInfo.dependencies);
+        importLanguageModules(taskInfo.language);
+        var json = {
+          "id": "http://castor-informatique.fr/questions/algorea_training/training-repeat-if-obstacles/",
+          "language": "fr",
+          "version": "fr.01",
+          "authors": "Mathias Hiron",
+          "translators": [],
+          "license": "CC-BY-SA",
+          "taskPathPrefix": "",
+          "modulesPathPrefix": "",
+          "browserSupport": [],
+          "fullFeedback": true,
+          "minWidth": "auto"
+        };
+      </script>
+      <script type="text/javascript">
+        window.initTask = taskInfo.initTask;
+        // initTask is in the parent's scope
+        var taskData = window.taskInfo.data;
+        window.parent.initBlocklySubTask = function(subTask) {
+          if(taskData) {
+            subTask.data = taskData;
+          }
+          try {
+            // Automatically add print_end as it is required for Python's print(end='')
+            if(subTask.gridInfos.includeBlocks.generatedBlocks.printer.indexOf('print') > -1 && subTask.gridInfos.includeBlocks.generatedBlocks.printer.indexOf('print_end') < 0) {
+              subTask.gridInfos.includeBlocks.generatedBlocks.printer.push('print_end');
+            }
+          } catch(e) {}
+          window.initBlocklySubTask(subTask);
+        }
+        initWrapper(initTask, ["easy"], null);
+        window.parent.languageStrings = window.languageStrings;
+      </script>
+      <script type="text/javascript" src="taskPlatformAdapter.js?v=4"></script>
+   </head>
+   <body onresize="task.displayedSubTask.updateScale()">
+      <div id="success" style="text-align: center; display: none;">
+         Tous les tests ont été validés.
+      </div>
+      <div id="task">
+         <div id="tabsContainer" style="display: none;"></div>
+         <div id="taskContent">
+            <div id="taskIntro" style="display: none;"></div>
+            <div id="gridContainer"></div>
+            <div id="blocklyLibContent"></div>
+         </div>
+      </div><!-- task -->
+   </body>
+</html>
+ 

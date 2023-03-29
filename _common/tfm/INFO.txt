@@ -1,0 +1,6 @@
+LocalTask.py  : everythong to manage a task
+TfmCommon.py  : common stuff for TestFileManagment
+TfmServeur.py : class for action on the evaluation servers   
+
+tfm.py        : executable for local tests/tasks
+tfms.py       : exexutable for tasks on the evaluation servers

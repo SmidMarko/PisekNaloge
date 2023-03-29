@@ -1,0 +1,46 @@
+requirejs.config({
+  "paths": {
+    "ace": modulesPath+"/ext/ace/ace",
+    "angular": modulesPath+"/ext/angular/angular.min",
+    "angular-ui-bootstrap-tpls": modulesPath+"/ext/angular-ui-bootstrap/ui-bootstrap-tpls-1.3.1.min",
+    "angular-ui-ace": modulesPath+"/ext/angular-ui-ace/ui-ace",
+    "fioi-editor2": modulesPath+"/ext/fioi-editor2/fioi-editor2.min",
+    "jquery": modulesPath+"/ext/jquery/2.1/jquery.min",
+    "lodash": modulesPath+"/ext/lodash/lodash.min",
+    "task-pr": modulesPath+"/integrationAPI.01/official/task-pr",
+    "installation": modulesPath+"/integrationAPI.01/installationAPI.01/pemFioi/installation",
+    "miniPlatform": modulesPath+"/integrationAPI.01/official/miniPlatform",
+    "models": taskPlatformPath+"/shared/models",
+    "modelsManager": modulesPath+"/pemFioi/modelsManager-1.0",
+    "jschannel": modulesPath+"/ext/jschannel/jschannel",
+    "installationToModel": modulesPath+"/pemFioi/installationToModel-1.0",
+    "taskController": taskPlatformPath+"/taskController",
+    "pem-api": taskPlatformPath+"/pem-api",
+    "limitsDirective": taskPlatformPath+"/limits/directive",
+    "hintsDirective": taskPlatformPath+"/hints/directive",
+    "showSource": taskPlatformPath+"/showSource",
+    "showSample": taskPlatformPath+"/samples/directive",
+  },
+  "shim": {
+    "lodash": {"exports": "_"},
+    "installationToModel": {"exports": "insertResourcesInModel", "deps": ["modelsManager", "models"]},
+    "models": {"exports": "models"},
+    "angular": {"exports": "angular"},
+    "angular-ui-bootstrap-tpls": {"deps": ["angular"]},
+    "angular-ui-ace": {"deps": ["angular", "ace"]},
+    "task-pr": {"deps": ["jquery"]},
+    "taskController": {"deps": ["angular", "angular-ui-ace", 'lodash']},
+    "taskCreationController": {"deps": ["taskController", "angular", "task-pr", "installationToModel", "models", "modelsManager"]},
+    "pem-api": {"deps": ["taskController", "task-pr","angular-ui-ace", 'lodash']},
+    "limitsDirective": {"deps": ["taskController", "angular-ui-ace", 'lodash']},
+    "hintsDirective": {"deps": ["taskController", "angular-ui-ace", 'lodash']},
+    "showSource": {"deps": ["taskController", "angular-ui-ace", 'lodash']},
+    "showSample": {"deps": ["taskController", "angular-ui-ace", 'lodash']},
+  }
+});
+require([
+  'angular', 'angular-ui-bootstrap-tpls',
+  'fioi-editor2', 'lodash',
+  'jschannel', 'task-pr',
+  'taskCreationController'
+]);

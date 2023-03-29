@@ -1,0 +1,46 @@
+{
+  "name": "task-platform",
+  "version": "0.1.0",
+  "homepage": "https://github.com/France-ioi/TaskPlatform",
+  "authors": [
+    "France IOI"
+  ],
+  "description": "France IOI's platform of tasks",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "SoundManager2": "soundmanager#*",
+    "angular": "~1.4",
+    "angular-bind-html-compile": "~1.1.0",
+    "angular-bootstrap": "~0.14.1",
+    "angular-sanitize": "~1.4",
+    "angular-i18n": "~1.4",
+    "bootstrap": "~3.3.5",
+    "fioi-editor2": "France-ioi/fioi-editor2#gulp",
+    "jquery": "~2.1.4",
+    "jschannel": "https://github.com/France-ioi/jschannel.git#01f53a1",
+    "lodash": "*",
+    "pem-task": "France-ioi/pem-task",
+    "bebras-modules": "https://github.com/France-ioi/bebras-modules.git",
+    "raphael": "~2.1.4",
+    "requirejs": "~2.1.20",
+    "saveSvgAsPng": "exupero/saveSvgAsPng",
+    "submission-manager": "France-IOI/submission-manager",
+    "transloadit_xhr": "tim-kos/transloadit_xhr",
+    "webvtt": "annevk/webvtt",
+    "i18next": "3.4.4",
+    "ng-i18next": "^1.0.3",
+    "i18next-xhr-backend": "^1.2.0"
+  },
+  "resolutions": {
+    "angular": "~1.4",
+    "angular-bootstrap": "~0.14.1",
+    "jschannel": "01f53a1"
+  }
+}

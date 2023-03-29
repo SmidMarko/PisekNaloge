@@ -1,0 +1,125 @@
+#dualView {
+   position: relative;
+   width: 100%;
+}
+#dualViewLeft {
+   display: inline-block;
+   vertical-align: top;
+   width: calc(50% - 4px);
+   padding-right: 4px;
+}
+#dualViewRight {
+   display: inline-block;
+   vertical-align: top;
+   width: calc(50% - 4px);
+   height: 100%;
+   border-left: 1px solid black;
+   padding-left: 4px;
+   padding-top: 40px;
+}
+#dualViewLeftContent, #dualViewRightContent {
+   margin-left: auto;
+   margin-right: auto;
+   width: 772px;
+}
+
+#popupMessage {
+   display: none;
+}
+#popupMessage .container {
+   position: relative;
+   margin: .5em 0;
+   padding: 8px;
+}
+#popupMessage.floatingMessage {
+   position: absolute;
+   z-index: 100;
+   top: 0;
+   left: 0;
+   height: 100%;
+   width: 100%;
+   background-color: gray;
+   background: rgba(0, 0, 0, .6);
+}
+#popupMessage.floatingMessage .container {
+   min-height: 100px;
+   max-width: 600px;
+   margin: 360px auto;
+   border: 2px solid black;
+   background: white;
+}
+#popupMessage img.beaver {
+   position: absolute;
+   width: 90px;
+}
+#popupMessage img.messageArrow {
+   position: absolute;
+   z-index: 1;
+   left: 100px;
+   top: 16px;
+}
+#popupMessage .message {
+   margin-left: 115px;
+   padding: 8px;
+   max-width: 500px;
+   border: 2px solid black;
+   border-radius: 8px;
+   text-align: justify;
+}
+#popupMessage p {
+   margin: .5em 0 0;
+}
+#popupMessage p:first-child {
+   margin-top: 0;
+}
+#popupMessage input {
+   margin-top: 1em;
+   margin-left: 200px;
+}
+#popupMessage button {
+   margin-top: 1em;
+   margin-left: 200px;
+}
+
+.panel {
+  position: relative;
+}
+
+.panel-opened::after {
+  content: "\25b2";
+  font-size: 20px;
+  position: absolute;
+  right: 10px;
+  top: 4px;
+}
+.panel-collapsed::after {
+  content: "\25bc";
+  font-size: 20px;
+  position: absolute;
+  right: 10px;
+  top: 4px;
+}
+
+.glyphicon-animate-spin {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+body.funtelecom button.btn.btn-info {
+    background-color: #0075B3;
+    border-color: #00456B;
+}
+
+body.funtelecom button.btn.btn-info:hover {
+    background-color: #005C8F;
+}

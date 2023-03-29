@@ -1,0 +1,1225 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<h1>STATEMENT</h1>
+
+<p>Pour toute information, contactez-moi : isma.belghiti@gmail.com</p>
+
+<h2>Présentation</h2>
+
+<h3>Fonctionnalités</h3>
+
+<p>
+Cette petite librairie C++ a pour but d'aider à la création de fichiers tests
+en permettant de générer des labyrinthes avec des murs, comme celui illustré ci-dessous :
+
+<center><div id="eller_0_3_v2"></div></center>
+
+<p>
+Elle propose de nombreux procédés de génération, permettant d'obtenir
+des types de labyrinthes différents afin de créer des fichiers tests variés.
+
+<p>
+Voici la liste des fonctions proposées (les détails sont fournis plus bas sur cette page) :<br/>
+<ul>
+
+<li>Pour la génération de labyrinthes aléatoires acycliques et connexes :
+  <ul>
+    <li>vector< vector< int > > <a href="#rand_maze_doc">rand_maze</a>(int nbLines, int nbCols);</li>
+    <li>vector< vector< int > > <a href="#rand_rec_split_maze_doc">rand_rec_split_maze</a>(int nbLines, int nbCols);</li>
+    <li>vector< vector< int > > <a href="#rand_rec_axis_split_maze_doc">rand_rec_axis_split_maze</a>(int nbLines, int nbCols, float steadiness);</li>
+    <li>vector< vector< int > > <a href="#rand_kruskal_maze_doc">rand_kruskal_maze</a>(int nbLines, int nbCols);</li>
+    <li>vector< vector< int > > <a href="#rand_prim_maze_doc">rand_prim_maze</a>(int nbLines, int nbCols,int iLineStart, int iColStart);</li>
+    <li>vector< vector< int > > <a href="#rand_dfs_maze_doc">rand_dfs_maze</a>(int nbLines, int nbCols,int iLineStart, int iColStart);</li>
+    <li>vector< vector< int > > <a href="#rand_bfs_maze_doc">rand_bfs_maze</a>(int nbLines, int nbCols,int iLineStart, int iColStart);</li>
+    <li>vector< vector< int > > <a href="#rand_dijkstra_maze_doc">rand_dijkstra_maze</a>(int nbLines, int nbCols,int iLineStart, int iColStart);</li>
+    <li>vector< vector< int > > <a href="#rand_hunt_and_kill_maze_doc">rand_hunt_and_kill_maze</a>(int nbLines, int nbCols,int iLineStart, int iColStart);</li>
+    <li>vector< vector< int > > <a href="#rand_binary_maze_doc">rand_binary_maze</a>(int nbLines, int nbCols);</li>
+    <li>vector< vector< int > > <a href="#rand_eller_maze_doc">rand_eller_maze</a>(int nbLines, int nbCols, float mergeProba);</li>
+    <li>vector< vector< int > > <a href="#rand_sidewinder_maze_doc">rand_sidewinder_maze</a>(int nbLines, int nbCols, float verticalProba);</li>
+  </ul>
+</li>   
+<br/>
+
+<li>Pour la génération de labyrinthes de formes particulières :
+  <ul>
+    <li>vector< vector< int > > <a href="#snake_maze_doc">snake_maze</a>(int nbLines, int nbCols); </li>
+    <li>vector< vector< int > > <a href="#spiral_maze_doc">spiral_maze</a>(int nbLines, int nbCols);</li>
+  </ul>
+</li>    
+<br/>
+
+<li>Pour transformer un labyrinthe acyclique connexe en un labyrinthe de taille double correspondant à un parcours eulérien
+de la forêt du premier :
+  <ul>
+   <li>vector< vector< int > > <a href="#unicycle_from_acyclic_maze_doc">unicycle_from_acyclic_maze</a>(vector< vector< int > > maze);</li>
+  </ul>
+</li>
+<br/>
+
+<li>Pour modifier un labyrinthe par ajout/suppression de murs :
+  <ul>
+       <li>vector< vector< int > > <a href="#add_walls_to_maze_doc">add_walls_to_maze</a>(vector< vector< int > > maze, int nbWalls);</li>
+       <li>vector< vector< int > > <a href="#remove_walls_from_maze_doc">remove_walls_from_maze</a>(vector< vector< int > > maze, int nbWalls);</li>
+  </ul>
+</li>    
+<br/>
+
+<li>Pour la conversion d'un labyrinthe avec des murs vers un labyrinthe avec des cases libres et des cases interdites :
+  <ul>
+    <li>vector< vector< bool > >  <a href="#convert_to_block_maze_doc">convert_to_block_maze</a>(vector< vector<int> > maze);</li>
+  </ul>
+</li>    
+</ul>
+<br/>
+
+<h3>Format du résultat</h3>
+<p>
+Toutes les fonctions de la lib, sauf convert_to_block_maze, renvoient un <i>vector< vector< int > ></i> 
+représentant le labyrinthe généré. Si on appelle <i>res</i> ce résultat, 
+alors:
+<ul>
+  <li>il y a un mur entre la case (iLine,iCol) et la case (iLine,iCol+1) lorsque
+    <i>(res[iLine][iCol]&1)==0</i>
+  </li>
+  <li>
+    il y a un mur entre la case (iLine,iCol) et la case (iLine+1,iCol) lorsque
+    <i>(res[iLine][iCol]&2)==0</i>
+  </li>
+</ul>
+
+<p>
+Remarque : Les murs séparant la grille de l'extérieur ne sont pas indiqués, 
+seuls ceux séparant deux cases de la grille le sont. Il faut également noter
+que l'opérateur & n'est pas prioritaire sur l'opérateur ==.
+
+<h3>Compilation</h3>
+
+<p>
+Pour utiliser cette librairie, il faut avoir accès au svn 
+<i>tasks</i>. Il suffit alors d'inclure un header : <br/>
+<pre>#include "rand_generators/rand.h"</pre><br/>
+et de rajouter "-I$FIOI_COMMON" dans la ligne de compilation :<br/>
+<pre>g++ -o exe monGenerateur.cpp -I$FIOI_COMMON</pre>
+
+<p>
+Note : Si vous utilisez le svn, vous avez probablement
+défini la variable d'environnement <i>$FIOI_COMMON</i>
+qui pointe vers le dossier <i>tasks/v01/_common</i> du svn.
+Si ce n'est pas le cas, définissez cette variable d'environnement. 
+
+<h3>Un exemple complet</h3>
+
+<p>
+Dans le programme suivant, on génère un labyinthe de taille 8 par 9
+en utilisant la fonction <i>rand_maze</i> :
+
+[SOLUTION:example::cpp]
+
+Ce programme affiche :
+<pre>
+1 1 3 1 1 1 3 1 0 
+2 2 3 3 0 2 2 1 2 
+1 2 2 1 2 3 2 2 2 
+1 3 3 0 0 2 1 1 0 
+2 0 3 0 1 2 2 2 2 
+2 3 0 3 1 1 1 3 2 
+3 3 0 3 3 2 3 0 2 
+0 0 1 0 0 0 0 1 0 
+
+</pre>
+ce qui correspond au labyrinthe suivant :
+<center><div id="example"></div></center>
+
+<h2>Détails des algorithmes</h2>
+
+<h2 id="rand_maze_doc">rand_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_maze(int nbLines, int nbCols);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe de façon uniforme en utilisant l'algorithme
+de Wilson. Peut être assez lent pour de grandes tailles de grille.
+Plus d'informations <a href="http://weblog.jamisbuck.org/2011/1/20/maze-generation-wilson-s-algorithm">ici</a>.
+<center><div id="uniform"></div></center>
+
+<h2 id="rand_rec_split_maze_doc">rand_rec_split_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_rec_split_maze(int nbLines, int nbCols);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe généré selon un procédé récursif partant
+d'une grille sans aucun mur : On partitionne la zone courante en deux connexes (par l'utilisation
+de deux BFS concurrents lancés depuis deux graines aléatoires), on construit la frontière entre les deux zones
+en ne laissant qu'un seul passage et on rappelle récursivement sur chacune des deux zones.
+Plus d'informations <a href="http://weblog.jamisbuck.org/2015/1/15/better-recursive-division-algorithm.html">ici</a>.
+<center><div id="rec_split"></div></center>
+
+<h2 id="rand_rec_axis_split_maze_doc">rand_rec_axis_split_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_rec_axis_split_maze(int nbLines, int nbCols, float steadiness);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe généré selon un procédé récursif partant
+d'une grille sans aucun mur : On partitionne la zone rectangulaire courante en deux rectangles, 
+on construit la frontière entre les deux zones en ne laissant qu'un seul passage et on rappelle 
+récursivement sur chacun des deux sous-rectangles. La direction de coupure est choisie uniformément
+entre les deux orientations possibles. Le choix de l'indice de coupure dépend du paramètre <i>steadiness</i>
+dont la valeur doit être entre 0.0 et 1.0. En notant s ce paramètre, le ratio de coupe sera tiré uniformément
+dans [s/2,1-s/2]. Mettre ce paramêtre à 1.0, entraîne donc que l'on va couper à chaque fois en deux parts
+quasi-égales, tandis que le mettre à 0.0 correspond à choisir l'indice de coupure uniformément parmi tous les
+indices possibles.
+Plus d'informations <a href="http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm">ici</a>.
+
+<p>
+Avec steadiness=0.0 :
+<center><div id="rec_axis_split_0"></div></center>
+
+<p>
+Avec steadiness=0.5 :
+<center><div id="rec_axis_split_0_5"></div></center>
+
+<p>
+Avec steadiness=1.0 :
+<center><div id="rec_axis_split_1"></div></center>
+
+<h2 id="rand_kruskal_maze_doc">rand_kruskal_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_kruskal_maze(int nbLines, int nbCols);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu comme un arbre couvrant de la grille en utisant une
+variante de l'algorithme de Kruskal où les arêtes sont prises dans un ordre aléatoire.
+Plus d'informations <a href="http://weblog.jamisbuck.org/2011/1/3/maze-generation-kruskal-s-algorithm.html">ici</a>.
+<center><div id="kruskal"></div></center>
+
+<h2 id="rand_prim_maze_doc">rand_prim_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_prim_maze(int nbLines, int nbCols,int iLineStart, int iColStart);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu comme l'arbre de découverte d'un parcours 
+partant d'une case de départ où à chaque étape on choisit uniformément un sommet de l'ensemble
+actif. Plus d'informations <a href="http://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm.html">ici</a>.
+<center><div id="prim"></div></center>
+
+
+<h2 id="rand_dfs_maze_doc">rand_dfs_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_dfs_maze(int nbLines, int nbCols,int iLineStart, int iColStart);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu comme l'arbre de découverte d'un parcours en profondeur
+partant d'une case de départ où (l'ordre d'énumération des voisins est randomisé).
+Plus d'informations <a href="http://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking.html">ici</a>.
+<center><div id="dfs"></div></center>
+
+<h2 id="rand_bfs_maze_doc">rand_bfs_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_bfs_maze(int nbLines, int nbCols,int iLineStart, int iColStart);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu comme l'arbre de découverte d'un parcours en largeur
+partant d'une case de départ (l'ordre d'énumération des voisins est randomisé).
+<center><div id="bfs"></div></center>
+
+<h2 id="rand_dijkstra_maze_doc">rand_dijkstra_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_dijkstra_maze(int nbLines, int nbCols,int iLineStart, int iColStart);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu comme l'arbre de découverte d'un Dijkstra
+partant d'une case de départ, les coûts des arêtes étant tirés uniformément dans l'intervalle [0,1].
+<center><div id="dijkstra"></div></center>
+
+<h2 id="rand_hunt_and_kill_maze_doc">rand_hunt_and_kill_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_hunt_and_kill_maze(int nbLines, int nbCols,int iLineStart, int iColStart);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu comme l'arbre de découverte d'un parcours
+"hunt-and-kill" comme décrit <a href="http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm">ici</a>.
+<center><div id="hunt_and_kill"></div></center>
+
+
+<h2 id="rand_binary_maze_doc">rand_binary_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_binary_maze(int nbLines, int nbCols);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu selon le procédé suivant : On part de la grille avec
+tous les murs possibles et, pour chaque case, on décide de briser soit le mur à 
+sa droite, soit celui en dessous (de façon équiprobable sauf si l'un des deux choix est impossible).
+Plus d'informations  <a href="http://weblog.jamisbuck.org/2011/2/1/maze-generation-binary-tree-algorithm.html">ici</a>.
+<center><div id="binary"></div></center>
+
+<h2 id="rand_eller_maze_doc">rand_eller_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_eller_maze(int nbLines, int nbCols, float mergeProba);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu selon l'algorithme de Eller, décrit 
+<a href="http://weblog.jamisbuck.org/2010/12/29/maze-generation-eller-s-algorithm.html">ici</a>.
+Cet algorithme construit le labyrinthe ligne par ligne, en conservant un ensemble de zones qui
+peuvent être fusionnées. La probabilité de fusion est donnée par le paramêtre <i>mergeProba</i>.
+
+<p>
+Avec mergeProba=0.0 :
+<center><div id="eller_0"></div></center>
+<p>
+Avec mergeProba=0.3 :
+<center><div id="eller_0_3"></div></center>
+<p>
+Avec mergeProba=0.8 :
+<center><div id="eller_0_8"></div></center>
+
+
+<h2 id="rand_sidewinder_maze_doc">rand_sidewinder_maze</h2>
+<p>
+<pre>vector< vector<int> > rand_sidewinder_maze(int nbLines, int nbCols, float verticalProba);</pre>
+
+<p>
+Renvoie un labyrinthe acyclique connexe obtenu selon l'algorithme décrit 
+<a href="http://weblog.jamisbuck.org/2011/2/3/maze-generation-sidewinder-algorithm.html">ici</a>.
+Cet algorithme construit le labyrinthe ligne par ligne, en choisissant, pour chaque emplacement possible
+de mur vertical, si le mur va être effectivement construit ou non avec une probabilité <i>verticalProba</i>.
+
+<p>
+Avec verticalProba=0.0 :
+<center><div id="sidewinder_0"></div></center>
+
+<p>
+Avec verticalProba=0.5 :
+<center><div id="sidewinder_0_5"></div></center>
+
+<p>
+Avec verticalProba=1.0 :
+<center><div id="sidewinder_1"></div></center>
+
+
+
+<h2 id="snake_maze_doc">snake_maze</h2>
+<p>
+<pre>vector< vector<int> > snake_maze(int nbLines, int nbCols);</pre>
+<p>
+Renvoie un labyrinthe composé d'un unique chemin qui serpente, comme illustré dans
+l'exemple si dessous :
+<center><div id="snake"></div></center>
+
+
+<h2 id="spiral_maze_doc">spiral_maze</h2>
+<p>
+<pre>vector< vector<int> > spiral_maze(int nbLines, int nbCols);</pre>
+<p>
+Renvoie un labyrinthe composé d'un unique chemin qui s'enroule sur lui même pour former une spirale,
+comme illustré dans l'exemple si dessous :
+<center><div id="spiral"></div></center>
+
+
+
+<h2 id="unicycle_from_acyclic_maze_doc">unicycle_from_acyclic_maze</h2>
+<p>
+<pre>vector< vector<int> > unicycle_from_acyclic_maze(vector< vector<int> > maze);</pre>
+
+<p>
+À partir d'un labyrinthe acyclique, renvoie un labyrinthe de taille double où chaque composante connexe
+du labyrinthe est transformée en un unique cycle, par l'ajout des arêtes duales comme montré dans l'exemple
+suivant (partant d'un labyrinthe avec une seule composante connexe).
+
+<p>
+En partant de  :
+<center><div id="halfcycle"></div></center>
+
+</p>
+On arrive à :
+<center><div id="cycle"></div></center>
+
+
+<h2 id="add_walls_to_maze_doc">add_walls_to_maze</h2>
+<p>
+<pre>vector< vector<int> > add_walls_to_maze(vector< vector<int> > maze, int nbWalls);</pre>
+<p>
+Renvoie un labyrinthe obtenu en ajoutant <i>nbWalls</i> murs (choisis uniformément) 
+à celui passé en entrée, ou renvoie un labyrinthe totalement muré s'il n'est pas possible d'en
+ajouter autant.
+<p>
+En partant de  :
+<center><div id="before_add"></div></center>
+</p>
+On arrive, pour <i>nbWalls=5</i>, à :
+<center><div id="after_add"></div></center>
+
+
+<h2 id="remove_walls_from_maze_doc">remove_walls_from_maze</h2>
+<p>
+<pre>vector< vector<int> > remove_walls_from_maze(vector< vector<int> > maze, int nbWalls);</pre>
+<p>
+Renvoie un labyrinthe obtenu en retirant <i>nbWalls</i> murs (choisis uniformément) 
+à celui passé en entrée, ou renvoie un labyrinthe sans mur s'il n'est pas possible d'en
+enlever autant.
+<p>
+En partant de  :
+<center><div id="before_remove"></div></center>
+</p>
+On arrive, pour <i>nbWalls=5</i>, à :
+<center><div id="after_remove"></div></center>
+
+
+
+
+<h2 id="convert_to_block_maze_doc">convert_to_block_maze</h2>
+<p>
+<pre>vector< vector<bool> > convert_to_block_maze(vector< vector<int> > maze);</pre>
+
+<p>
+Permet de convertir un labyrinthe avec des murs en labyrinthe avec des cases libres et des 
+cases interdites comme illustré dans l'exemple ci-dessous. Si le labyrinthe initial avait
+<i>nbLignes</i> lignes et <i>nbCols</i> colonnes, alors celui renvoyé en résultat aura
+<i>2*nbLignes-1</i> lignes et <i>2*nbCols-1</i> colonnes. Une valeur à vrai indique
+une case libre (en blanc dans l'exemple) tandis qu'une valeur à faux indique une
+case interdite (en bleu dans l'exemple).
+
+<p>
+En partant de  :
+<center><div id="wallMaze"></div></center>
+
+</p>
+On arrive à :
+<center><div id="blockMaze"></div></center>
+
+
+
+
+<script type="text/javascript" src="http://www.france-ioi.org/ext/raphael-min.js"></script>
+<script type="text/javascript">
+var display_maze = function(divId,nbLines, nbCols, maze, maxTotalSize)  {
+
+  if(maxTotalSize == undefined)
+      maxTotalSize = 500;
+  var margin = 10;
+  
+  var cellSize = maxTotalSize / nbLines;
+  if(nbCols > nbLines)
+     cellSize = maxTotalSize / nbCols;
+
+  var paper = Raphael(divId,
+    2*margin + nbCols*cellSize,10+margin+nbLines*cellSize);
+
+  for(var iLine = 0; iLine < nbLines; iLine++) {
+    for(var iCol = 0; iCol < nbCols; iCol++) {
+      paper.rect(margin+iCol*cellSize,margin+iLine*cellSize,
+                 cellSize-1, cellSize-1).attr("stroke-width","0.3");
+    }
+  }
+
+  paper.rect(margin,margin,nbCols*cellSize,nbLines*cellSize)
+	     .attr("stroke-width","3").attr("stroke","blue");
+
+  for(var iLine = 0; iLine < nbLines; iLine++) {
+    for(var iCol = 0; iCol < nbCols; iCol++) {
+      if(maze[iLine][iCol]%2 == 0)
+        paper.rect(margin+(iCol+1)*cellSize,margin+iLine*cellSize,1,cellSize)
+	     .attr("stroke-width","3").attr("stroke","blue");
+      if(maze[iLine][iCol] <= 1)
+        paper.rect(margin+iCol*cellSize,margin+(iLine+1)*cellSize,cellSize,1)
+	     .attr("stroke-width","3").attr("stroke","blue");
+    }
+  }
+}
+
+var display_block_maze = function(divId,nbLines, nbCols, maze,maxTotalSize)  {
+
+  if(maxTotalSize == undefined)
+      maxTotalSize = 500;
+  var margin = 50;
+  
+  var cellSize = maxTotalSize / nbLines;
+  if(nbCols > nbLines)
+     cellSize = maxTotalSize / nbCols;
+
+  var paper = Raphael(divId,
+    2*margin + nbCols*cellSize,10+margin+nbLines*cellSize);
+
+  for(var iLine = 0; iLine < nbLines; iLine++) {
+    for(var iCol = 0; iCol < nbCols; iCol++) {
+      var r = paper.rect(margin+iCol*cellSize,margin+iLine*cellSize,
+                 cellSize-1, cellSize-1).attr("stroke-width","0.3");
+      if(maze[iLine][iCol] == 0)
+         r.attr("fill","blue");
+    }
+  }
+
+  paper.rect(margin,margin,nbCols*cellSize,nbLines*cellSize)
+	     .attr("stroke-width","3").attr("stroke","blue");
+}
+
+display_maze("eller_0_3_v2",27,41,[
+[1,2,2,2,3,1,2,2,2,2,2,3,2,2,2,2,2,2,3,0,3,0,2,2,3,0,2,2,3,3,0,2,2,2,2,2,2,2,2,2,2,],
+[2,2,1,1,0,3,1,2,3,0,2,0,2,2,2,2,3,2,2,2,1,2,2,1,1,2,2,2,2,0,2,2,3,0,2,2,2,1,2,2,2,],
+[2,1,2,2,2,2,2,2,2,3,0,1,2,1,2,1,2,2,2,2,1,2,1,2,2,2,3,1,0,1,2,1,3,1,0,2,2,2,2,1,2,],
+[2,2,2,2,1,0,2,1,3,0,2,3,3,1,2,2,2,1,0,2,1,2,2,1,3,1,0,2,2,2,2,2,2,2,2,2,2,1,3,0,2,],
+[2,2,2,2,2,2,1,2,2,2,2,2,0,2,0,2,3,2,3,2,2,2,3,2,2,2,3,2,2,2,2,2,2,2,2,1,2,2,3,0,2,],
+[2,2,1,2,2,2,3,0,3,2,3,0,2,2,2,2,0,3,0,0,2,2,2,0,2,1,2,2,3,1,3,2,2,3,0,3,0,2,2,3,2,],
+[3,3,2,2,2,2,2,3,0,0,2,2,2,3,2,2,1,3,2,2,2,1,1,3,3,1,2,2,2,2,2,0,2,2,2,2,2,3,0,2,0,],
+[0,2,3,0,1,2,2,2,2,2,2,2,2,0,3,2,2,2,2,2,1,2,2,2,1,0,0,0,2,2,3,0,2,1,3,0,2,3,0,2,2,],
+[3,0,2,2,3,0,2,3,0,2,2,2,3,0,0,3,2,0,2,3,0,2,2,3,0,2,3,2,0,2,2,2,3,1,0,3,2,3,0,2,2,],
+[0,2,2,2,3,1,1,2,2,2,2,2,3,1,2,2,1,0,2,2,3,2,3,2,2,2,2,1,1,2,2,3,1,2,2,2,1,1,2,2,2,],
+[2,2,1,2,3,3,0,2,1,3,0,1,0,2,2,2,2,3,0,2,2,2,2,0,2,1,1,2,2,0,2,0,2,2,1,0,2,2,3,0,2,],
+[2,1,2,2,0,2,2,0,2,3,0,2,2,1,1,2,2,2,2,2,2,0,1,3,0,2,2,2,1,1,3,0,2,2,2,2,3,0,3,3,2,],
+[2,2,2,2,2,3,1,2,2,2,2,2,2,2,2,2,2,2,2,2,3,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,0,],
+[2,2,2,2,3,2,2,0,3,0,2,2,2,2,3,3,2,2,3,0,2,2,2,3,2,2,1,3,0,2,2,2,2,2,2,3,3,0,2,0,2,],
+[1,2,2,2,0,2,2,3,2,2,2,1,3,1,0,0,0,2,2,3,0,2,2,2,2,2,2,3,2,2,2,2,2,3,0,0,3,0,2,2,2,],
+[2,1,3,2,3,0,2,2,2,2,1,3,0,2,2,1,1,2,2,2,2,2,3,0,0,1,2,2,0,2,1,2,2,1,1,1,2,3,0,2,2,],
+[2,2,2,0,3,2,2,0,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,1,2,3,0,2,2,1,1,2,2,2,2,2,2,2,3,1,0,],
+[3,1,0,2,0,2,3,2,2,2,3,2,2,3,0,3,0,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,3,2,1,2,0,2,2,2,2,],
+[2,2,1,3,0,2,2,2,2,3,0,1,0,2,3,0,3,0,2,3,0,2,3,2,2,2,2,2,2,3,0,2,2,0,2,2,2,2,2,2,2,],
+[1,1,2,1,2,2,2,2,2,1,2,2,2,3,0,1,2,1,3,0,2,1,2,1,1,3,2,2,3,3,3,2,3,2,2,2,2,2,1,2,2,],
+[1,2,1,2,2,1,2,0,2,2,2,3,1,3,1,2,2,1,2,3,0,2,1,2,2,2,2,2,0,0,2,2,2,0,2,2,2,3,0,2,2,],
+[2,2,2,3,2,2,2,2,3,0,2,2,2,2,3,0,2,2,2,2,3,0,1,0,2,0,3,3,2,2,0,2,2,2,2,2,2,3,2,2,2,],
+[3,3,0,2,1,1,1,0,2,2,2,0,3,2,2,1,2,2,2,2,3,0,3,0,2,3,0,0,3,0,2,2,2,2,3,0,3,2,2,2,2,],
+[0,2,2,2,2,2,3,2,2,2,2,2,0,0,2,2,1,2,3,0,2,2,2,2,3,2,2,1,0,3,3,0,2,2,2,2,0,2,0,2,2,],
+[2,2,2,2,2,2,2,2,3,2,1,2,2,3,3,0,2,2,2,2,2,3,0,2,2,2,2,3,0,2,0,2,2,3,0,3,2,2,2,3,0,],
+[2,2,2,2,2,2,2,0,0,2,3,2,3,0,0,2,2,2,1,3,0,1,2,2,0,2,3,0,3,3,2,2,2,1,2,2,0,3,0,1,2,],
+[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,],
+]);
+
+display_maze("example",8,9,[
+[1, 1, 3, 1, 1, 1, 3, 1, 0 ],
+[2, 2, 3, 3, 0, 2, 2, 1, 2 ],
+[1, 2, 2, 1, 2, 3, 2, 2, 2 ],
+[1, 3, 3, 0, 0, 2, 1, 1, 0 ],
+[2, 0, 3, 0, 1, 2, 2, 2, 2 ],
+[2, 3, 0, 3, 1, 1, 1, 3, 2 ],
+[3, 3, 0, 3, 3, 2, 3, 0, 2 ],
+[0, 0, 1, 0, 0, 0, 0, 1, 0 ]],200);
+
+display_maze("uniform",27,41,[
+[1,3,1,3,0,1,2,3,1,1,3,2,2,2,2,2,3,1,1,3,1,3,2,2,2,2,2,3,1,0,2,1,3,1,0,2,3,0,2,3,0,],
+[3,1,0,2,3,0,1,0,2,3,2,0,3,1,2,3,0,2,1,2,2,0,1,2,3,1,1,0,3,0,2,2,3,0,2,1,3,3,3,2,2,],
+[0,3,0,3,3,2,2,3,1,0,3,1,0,1,2,0,2,3,0,2,1,3,0,3,0,3,2,1,1,3,1,0,2,3,3,0,2,0,0,3,2,],
+[3,3,2,2,0,3,0,2,2,1,1,0,1,1,2,3,2,3,3,1,1,1,2,0,1,0,2,3,1,1,2,1,3,0,2,2,2,2,1,0,0,],
+[2,0,3,0,2,2,3,0,1,3,3,3,1,0,1,0,1,0,3,0,1,2,3,1,1,0,1,1,0,1,1,1,0,1,1,2,3,1,0,3,0,],
+[1,2,0,3,2,1,0,1,2,2,2,1,1,3,3,0,1,2,1,0,3,1,2,2,3,2,1,1,1,3,2,3,1,0,2,2,3,1,1,1,2,],
+[3,1,3,2,1,3,2,1,1,0,3,1,2,2,1,1,3,0,2,3,3,0,1,2,0,3,1,0,1,0,1,2,2,3,1,1,1,1,0,1,2,],
+[2,1,0,0,3,2,3,3,1,0,3,2,0,2,2,3,3,1,0,0,0,1,1,3,0,1,2,2,3,1,2,2,3,1,0,3,0,1,2,1,2,],
+[1,2,3,1,0,2,0,0,2,1,0,2,1,3,2,0,3,3,0,3,1,1,1,0,2,3,1,1,1,0,2,3,0,3,1,3,2,3,3,3,0,],
+[2,0,1,2,2,3,3,0,1,3,0,1,0,2,2,3,0,2,2,1,0,1,3,0,2,1,0,3,0,2,1,1,3,2,3,0,0,2,2,1,2,],
+[3,0,3,1,0,2,0,2,3,1,2,1,3,0,0,0,2,1,2,1,2,1,2,3,1,1,1,2,2,1,3,0,0,2,1,1,0,2,2,1,0,],
+[2,2,1,0,3,3,1,3,1,0,0,3,1,3,0,1,3,2,0,3,1,2,3,1,0,3,0,1,3,0,3,1,2,2,1,1,2,2,1,3,0,],
+[2,1,1,3,0,2,1,1,3,1,1,2,1,3,0,3,2,0,2,3,0,1,1,2,2,3,3,2,2,3,0,1,0,1,3,0,1,2,2,1,2,],
+[1,1,2,2,2,1,2,2,3,0,1,2,2,1,1,0,0,2,2,0,2,3,0,1,0,0,2,3,1,0,1,1,3,2,2,1,3,2,1,3,0,],
+[3,2,2,1,0,3,1,0,0,2,1,2,2,1,3,2,1,2,2,1,3,0,3,0,2,3,0,2,3,3,1,0,2,3,0,2,0,1,0,0,2,],
+[0,1,1,2,2,0,3,1,3,0,3,1,1,1,0,1,2,1,2,1,3,2,3,1,2,0,3,1,0,0,2,1,2,3,2,1,3,2,2,1,2,],
+[3,1,0,1,2,3,3,0,1,1,2,2,2,3,3,0,1,1,3,0,2,0,3,0,1,3,2,1,1,1,2,1,2,0,0,3,0,3,1,1,2,],
+[3,1,3,1,1,0,2,1,2,3,2,2,2,2,2,2,2,1,3,0,2,1,0,1,1,0,2,3,1,2,1,3,3,3,3,0,1,2,2,1,0,],
+[0,2,1,1,1,2,0,2,2,2,1,0,3,0,2,3,0,2,3,0,3,1,0,1,2,2,2,2,2,0,3,0,0,2,1,3,0,3,3,1,0,],
+[2,3,2,3,0,2,2,2,3,3,0,1,2,2,1,0,3,1,0,1,3,0,1,3,0,3,2,3,3,2,3,0,2,0,1,0,1,0,1,3,2,],
+[2,0,2,1,3,1,1,2,0,0,3,1,3,2,1,2,1,1,3,0,3,1,1,2,3,0,1,0,2,0,1,1,1,2,2,3,2,2,2,2,0,],
+[1,1,1,3,0,3,2,1,0,1,0,3,0,1,0,2,1,1,3,0,3,1,0,3,1,0,1,3,1,3,1,1,0,2,2,0,2,3,3,1,2,],
+[1,1,3,0,2,0,2,3,3,0,3,3,1,3,2,3,1,1,2,1,1,3,2,1,0,2,2,2,1,1,2,1,2,2,2,3,0,0,2,3,2,],
+[2,3,1,0,1,1,1,0,2,2,0,2,1,0,0,2,2,2,3,0,1,2,1,0,3,1,0,1,0,3,1,2,3,0,2,2,3,2,0,2,0,],
+[1,2,3,1,0,2,3,3,1,0,2,3,0,2,3,0,2,2,2,1,3,1,1,1,3,0,2,2,2,0,2,0,3,3,0,2,0,3,2,1,2,],
+[1,1,3,2,3,1,2,1,1,0,2,3,1,0,2,3,3,0,0,2,1,0,2,3,3,1,3,3,1,1,1,3,2,2,2,3,0,0,1,3,2,],
+[1,1,0,1,1,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,1,0,1,0,1,1,0,0,1,1,1,1,1,0,0,0,],
+]);
+
+
+
+display_maze("kruskal",27,41,[
+[2,1,2,3,0,3,0,2,1,3,3,1,1,3,0,3,1,1,1,2,1,2,2,1,3,2,3,3,0,1,3,0,2,2,3,1,3,2,1,3,0,],
+[2,1,3,3,1,2,3,1,1,0,1,0,2,3,1,3,0,2,3,3,3,1,0,2,2,0,0,2,2,3,0,1,2,2,2,1,0,2,1,3,2,],
+[2,1,0,2,1,1,3,0,1,2,1,2,1,2,2,2,2,3,0,0,2,2,2,1,2,1,1,2,2,3,3,3,1,1,1,0,1,0,2,2,0,],
+[3,0,2,0,3,1,1,1,1,2,1,3,2,0,1,3,2,1,0,3,1,0,2,3,3,2,2,3,3,2,0,3,1,1,1,0,3,2,3,1,2,],
+[3,0,2,1,3,3,3,1,0,1,1,0,3,0,3,0,1,0,3,1,1,0,2,0,0,1,2,0,2,1,0,0,1,3,0,3,0,2,1,2,0,],
+[3,0,3,2,2,0,3,3,3,0,3,2,2,1,3,1,0,3,2,3,0,3,0,1,2,3,0,1,3,1,1,1,1,0,3,2,2,2,2,2,2,],
+[2,2,0,1,0,3,2,0,0,1,0,1,0,2,2,3,2,2,1,1,3,1,1,0,1,1,3,3,1,1,2,2,1,3,2,0,2,1,3,3,0,],
+[1,1,3,1,1,0,2,1,2,3,3,2,2,2,1,2,2,3,2,2,0,1,1,1,3,2,0,1,1,0,2,1,2,0,2,1,3,0,2,0,2,],
+[1,1,1,0,3,0,3,2,3,0,0,1,2,1,2,2,0,2,1,1,3,2,3,2,2,1,2,2,1,2,1,2,1,1,1,0,3,1,1,3,2,],
+[2,1,3,1,3,1,2,1,1,0,3,0,0,2,1,0,3,0,1,2,2,0,2,1,2,1,3,0,3,3,1,2,2,1,1,3,3,1,2,2,0,],
+[1,2,2,2,3,0,1,1,3,1,0,3,3,3,1,0,0,2,1,2,1,0,2,3,0,1,1,3,2,0,2,0,1,2,2,2,0,2,0,1,2,],
+[2,2,0,3,0,1,1,1,3,3,0,2,2,1,2,3,2,1,1,3,1,2,2,0,3,1,0,2,1,1,1,0,2,2,2,2,2,1,3,0,0,],
+[1,1,2,3,1,1,1,0,0,3,1,0,2,1,0,2,0,3,1,2,1,2,2,1,2,2,3,0,1,1,3,3,2,1,2,2,1,1,3,1,0,],
+[3,0,3,0,2,3,2,1,3,2,3,0,0,1,2,1,1,3,0,0,2,0,1,0,1,1,3,3,2,1,0,2,1,2,1,2,1,2,1,1,2,],
+[3,2,0,3,3,2,2,3,2,1,0,1,2,1,2,3,1,1,3,0,1,1,3,1,2,3,0,2,1,2,1,0,2,3,2,3,1,1,3,1,0,],
+[0,3,3,0,2,0,0,2,1,0,3,0,3,0,1,0,1,1,3,0,3,1,1,2,0,0,2,0,3,3,0,2,2,2,1,0,3,1,3,1,2,],
+[1,0,2,3,1,0,1,3,1,1,3,3,1,1,0,1,1,1,3,1,3,2,1,0,2,3,2,2,2,3,0,3,1,1,0,2,0,2,2,1,2,],
+[3,3,0,1,1,1,0,0,2,2,0,2,1,3,1,1,2,2,2,3,0,2,3,3,0,0,3,1,0,2,1,1,2,3,1,0,3,1,3,0,0,],
+[2,3,2,3,1,3,1,0,3,1,1,0,3,1,0,3,3,1,2,1,2,3,2,3,2,1,1,0,2,3,3,1,1,2,2,1,2,1,1,0,2,],
+[0,2,1,2,3,2,3,3,1,1,1,1,0,3,2,0,1,2,0,3,0,0,2,0,2,3,2,3,1,0,2,2,2,1,0,3,1,1,0,1,2,],
+[1,3,0,0,0,2,0,3,0,2,1,3,1,2,0,2,2,2,1,1,2,1,2,2,2,0,1,2,2,1,2,2,2,3,1,1,2,1,3,3,0,],
+[3,2,3,0,2,3,0,3,3,1,2,2,2,1,0,3,1,0,2,2,0,1,1,0,1,1,1,2,3,0,2,2,2,1,1,0,0,1,0,1,2,],
+[0,1,2,1,2,0,2,2,0,1,3,1,2,2,2,3,0,2,3,1,3,0,2,2,3,0,3,0,1,1,1,3,0,3,3,0,1,3,0,2,2,],
+[1,1,3,3,1,0,1,2,3,3,3,0,3,0,3,2,2,1,2,1,1,3,1,3,2,1,1,3,0,3,2,3,2,2,1,1,0,1,2,1,2,],
+[1,2,0,1,2,2,1,0,2,0,2,2,3,0,2,1,0,3,0,2,2,0,1,2,3,1,2,3,0,2,3,0,2,1,3,2,1,1,3,3,0,],
+[1,3,2,3,1,3,0,2,3,0,3,0,0,1,3,3,0,0,2,2,1,3,3,2,1,2,1,2,2,0,3,2,1,1,0,2,1,1,2,2,2,],
+[1,0,1,1,0,1,1,1,1,0,1,1,0,1,0,1,0,1,1,1,1,0,0,0,1,1,0,1,0,1,0,0,1,1,1,1,1,1,0,1,0,],
+]);
+
+
+
+display_maze("rec_split",27,41,[
+[3,2,2,2,3,3,0,1,3,1,1,2,2,2,3,2,2,3,1,2,1,2,3,2,2,3,2,3,0,2,2,2,1,3,0,2,2,2,3,3,2,],
+[0,2,3,2,0,3,2,3,3,0,2,1,2,2,1,2,2,2,1,1,1,2,0,1,1,2,0,1,2,2,2,2,3,3,2,1,2,2,0,2,2,],
+[1,2,0,3,3,0,0,0,3,2,2,3,1,0,1,0,2,1,0,2,1,2,3,1,1,0,2,2,3,3,2,3,3,0,1,1,0,2,1,2,2,],
+[1,2,2,2,2,3,0,3,0,2,2,3,2,1,2,2,2,3,1,0,3,2,1,3,2,2,2,2,2,0,2,2,3,0,2,2,2,1,1,2,0,],
+[1,2,3,2,2,3,0,3,2,1,0,0,1,2,2,2,2,3,2,3,2,0,3,0,1,3,2,2,2,2,2,0,2,2,3,3,2,1,2,3,2,],
+[1,2,2,2,2,1,2,2,1,1,0,3,1,1,0,1,2,3,0,2,0,1,3,0,1,2,2,2,2,3,2,2,3,3,0,0,0,2,1,2,0,],
+[3,1,2,2,3,1,0,1,1,1,0,1,1,1,2,1,2,3,1,0,3,2,2,3,0,0,2,2,2,0,2,0,2,1,2,1,3,2,3,3,0,],
+[1,2,2,2,3,1,0,1,2,0,3,0,3,2,1,3,2,2,1,2,0,1,1,1,1,2,0,2,2,3,1,4,0,3,1,2,2,1,2,1,0,],
+[1,0,2,2,1,2,2,3,1,3,0,2,2,1,2,2,2,2,2,3,1,1,1,1,1,1,3,3,2,3,0,0,0,1,0,1,3,2,3,0,2,],
+[1,2,0,2,2,1,0,1,0,3,2,2,2,3,0,2,0,2,2,2,1,2,1,1,3,3,2,2,0,3,1,2,1,2,3,1,0,0,3,1,0,],
+[2,2,3,0,2,1,2,2,3,3,1,2,2,3,2,1,2,2,2,2,3,2,3,3,2,0,0,1,2,2,1,1,1,0,0,2,1,1,3,3,0,],
+[3,1,0,1,3,2,3,0,2,0,3,2,0,0,0,1,2,2,3,2,2,2,2,2,3,2,2,3,0,3,1,2,1,2,3,0,2,1,0,1,0,],
+[3,1,2,3,0,1,2,2,1,2,0,3,0,2,2,1,2,2,2,2,0,2,0,2,0,3,0,2,2,2,1,0,3,0,2,1,2,2,3,3,0,],
+[3,0,2,1,3,0,3,2,3,0,1,1,1,3,2,3,2,0,0,0,1,3,3,0,2,2,2,3,0,3,1,2,3,0,2,2,3,3,0,3,2,],
+[2,1,2,3,0,2,2,2,0,1,1,3,0,0,2,3,2,3,1,1,0,1,3,0,2,3,0,3,2,1,2,2,1,3,2,1,2,0,3,0,0,],
+[3,0,1,0,2,3,2,2,2,3,1,2,2,1,1,2,2,1,4,0,2,2,0,3,2,2,2,2,2,2,1,3,1,2,1,3,0,0,3,1,2,],
+[1,1,0,2,1,2,2,2,1,3,0,1,2,0,3,0,2,1,2,2,2,1,2,0,2,2,2,0,2,2,2,1,0,0,3,0,3,0,1,1,2,],
+[2,2,3,0,3,0,2,0,1,1,3,1,2,3,1,2,3,1,0,3,2,1,1,2,0,2,2,3,1,2,3,2,3,0,2,1,2,2,3,3,0,],
+[1,1,1,2,3,0,3,2,1,1,1,0,0,1,0,0,2,2,2,2,3,3,2,2,2,1,0,1,0,1,0,0,1,0,1,1,1,2,0,1,0,],
+[3,1,1,3,0,3,2,2,1,1,3,0,3,0,1,2,2,3,3,2,1,1,2,1,3,0,1,2,3,2,2,2,3,2,3,2,1,1,3,3,2,],
+[1,3,0,0,3,0,2,0,3,3,2,1,3,1,3,0,2,0,0,1,1,0,1,2,1,3,3,1,0,0,2,2,0,2,2,2,2,1,2,0,0,],
+[2,1,3,2,1,2,2,2,0,3,1,0,3,0,1,3,2,1,3,0,1,2,3,0,2,2,2,3,0,3,3,1,3,2,0,1,3,1,1,3,4,],
+[2,3,2,1,2,0,1,0,1,1,3,2,2,3,0,0,0,1,1,1,1,3,1,0,1,2,3,1,2,2,2,2,2,0,2,3,2,3,0,0,0,],
+[3,2,2,3,1,0,3,3,1,2,1,0,1,3,3,0,2,1,3,1,1,1,1,0,1,0,0,1,1,0,0,1,1,3,0,0,3,0,3,0,0,],
+[2,2,2,3,1,1,2,0,2,1,1,2,3,0,1,1,0,2,2,1,1,1,2,3,0,2,2,2,3,3,5,3,0,1,2,1,2,2,1,1,2,],
+[2,2,2,1,3,0,2,2,3,1,3,2,3,3,3,1,2,2,3,1,3,2,2,2,2,1,3,1,2,0,0,1,0,3,0,1,3,2,3,3,2,],
+[0,0,0,1,1,0,1,0,0,1,0,0,0,0,0,1,0,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,0,1,1,1,0,1,0,0,0,],
+]);
+
+display_maze("rec_axis_split_0",27,41,[
+[2,2,3,2,2,2,2,3,3,3,2,2,3,2,2,2,3,3,2,3,1,3,2,1,3,3,2,2,2,2,2,2,2,2,2,2,2,2,3,1,0,],
+[2,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,0,2,2,1,0,2,3,2,2,2,2,2,2,2,2,2,2,3,3,1,0,],
+[2,2,2,2,0,3,2,2,0,0,3,0,2,0,2,2,2,2,2,3,0,2,3,1,1,0,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,],
+[2,3,2,3,2,2,2,1,1,2,1,2,1,2,2,3,2,2,0,3,0,0,0,1,1,1,0,2,2,2,2,3,2,2,2,2,2,2,2,1,2,],
+[2,2,2,0,1,0,0,1,1,2,3,1,3,1,2,2,2,2,2,3,1,1,1,1,1,1,0,2,2,2,2,2,2,2,2,2,2,2,1,2,0,],
+[2,2,1,3,1,1,0,2,2,2,3,0,2,2,2,2,2,2,2,2,3,2,3,2,3,1,2,3,2,2,2,2,3,2,3,2,2,2,1,1,2,],
+[2,2,1,3,1,1,0,2,2,2,3,0,2,2,2,2,2,2,2,1,0,3,0,1,1,0,0,0,0,2,2,2,2,2,2,2,2,2,3,1,0,],
+[2,2,1,1,3,1,0,3,1,2,3,0,2,2,2,2,2,2,3,1,1,3,1,1,1,1,1,1,0,2,2,2,0,0,2,2,3,2,1,1,2,],
+[2,2,2,2,2,2,2,3,0,0,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,3,1,1,0,2,2,3,2,2,2,3,2,2,1,1,2,],
+[2,2,3,2,2,2,2,1,3,0,2,2,3,2,2,2,2,2,2,1,1,1,1,1,1,1,1,3,0,2,2,2,3,2,2,2,0,2,3,2,2,],
+[2,2,2,2,2,2,2,1,3,0,2,2,2,2,3,2,2,3,2,1,1,1,1,1,1,1,1,3,0,2,2,0,0,2,2,1,2,2,2,1,0,],
+[2,2,2,2,2,2,2,1,3,0,3,0,2,2,2,2,2,2,2,1,1,1,1,1,3,1,1,1,0,2,2,2,2,2,2,3,0,2,1,3,0,],
+[2,2,2,2,2,2,2,1,1,0,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,3,1,0,3,2,2,2,3,2,1,2,2,3,1,0,],
+[2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,3,0,2,2,2,3,2,2,3,0,2,2,2,2,],
+[2,2,2,3,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,3,1,2,2,3,2,2,2,3,0,2,2,2,2,],
+[2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,3,1,1,1,1,2,2,2,2,2,2,2,3,0,2,3,3,0,],
+[2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,3,1,0,1,1,1,1,1,1,0,2,2,2,0,0,0,0,1,0,0,0,1,2,],
+[2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,0,2,2,2,2,3,0,1,2,2,1,2,3,2,],
+[2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,0,0,2,2,2,3,2,3,0,2,1,2,0,2,],
+[2,2,2,2,2,3,2,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,0,2,2,2,1,2,2,2,],
+[2,2,2,2,2,2,2,1,2,2,2,2,3,2,2,2,2,3,1,3,1,3,1,2,3,1,1,1,2,2,2,2,3,2,3,2,2,3,3,2,2,],
+[2,2,2,2,2,2,2,3,3,3,2,2,2,2,2,1,1,0,1,1,0,0,1,1,0,1,1,3,0,2,2,2,0,2,2,2,2,0,2,3,2,],
+[2,2,2,0,2,2,2,0,2,2,3,2,2,2,2,2,1,3,1,1,1,1,1,1,1,1,1,1,0,2,2,2,3,0,0,2,2,2,2,2,2,],
+[2,2,2,3,3,2,2,3,0,2,2,3,2,2,2,2,3,2,1,1,1,1,1,1,1,1,1,1,2,2,2,2,3,3,3,3,2,3,2,2,2,],
+[2,2,2,2,2,2,2,3,0,2,2,2,2,3,2,2,2,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,0,3,0,0,0,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,3,1,1,0,2,3,2,0,2,3,0,2,1,1,3,0,],
+[1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0,1,0,0,1,1,1,0,],
+]);
+display_maze("rec_axis_split_0_5",27,41,[
+[1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,0,1,1,3,1,0,2,3,2,2,2,1,2,3,1,1,3,3,2,],
+[1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,3,1,1,1,3,0,3,0,3,2,3,1,3,3,0,1,2,2,2,],
+[1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1,0,0,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[2,2,2,1,3,1,1,0,2,3,2,2,1,1,1,1,2,1,3,0,3,2,3,3,3,3,2,2,2,2,2,2,2,2,2,2,3,2,3,2,2,],
+[2,2,3,1,1,1,3,0,3,0,2,2,1,1,1,1,2,3,2,2,2,1,2,2,2,0,2,2,2,2,2,2,2,2,2,3,2,2,2,2,2,],
+[2,3,0,1,1,3,1,0,2,2,2,2,1,1,1,1,2,2,3,2,1,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,3,2,3,2,],
+[3,2,2,2,3,2,1,2,2,2,2,3,1,1,1,1,2,2,0,0,3,2,2,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,3,2,2,2,2,3,2,1,2,2,3,1,1,1,0,1,1,3,0,0,2,0,0,0,0,2,2,2,2,2,2,3,2,2,2,2,2,2,2,],
+[2,2,2,1,0,0,2,2,2,2,2,2,1,3,1,1,0,2,2,2,2,1,1,3,3,1,0,2,2,2,2,2,2,2,3,2,2,2,2,2,2,],
+[2,2,3,2,3,2,1,2,2,3,2,2,3,1,1,1,0,3,2,2,2,1,1,2,2,2,2,2,2,2,2,3,2,2,2,2,2,2,2,0,0,],
+[2,2,2,2,2,2,3,2,2,2,2,2,3,1,1,1,1,2,3,2,2,2,2,2,1,3,0,2,2,2,2,2,2,2,2,2,2,2,1,1,2,],
+[0,0,0,1,0,1,2,0,0,0,1,0,1,1,1,1,0,0,0,0,2,2,3,2,1,2,2,3,2,2,2,2,2,2,2,2,2,2,2,3,0,],
+[1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,3,0,2,2,2,2,2,2,3,2,2,2,2,2,3,2,2,],
+[1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,3,2,2,3,2,3,2,2,2,3,3,2,2,2,2,3,2,2,2,2,2,2,2,2,2,2,],
+[1,3,1,1,1,1,1,1,1,1,0,3,3,1,2,2,2,2,2,2,2,2,2,2,0,2,3,2,2,2,2,2,2,2,2,2,2,2,2,3,2,],
+[1,1,1,1,1,1,1,1,1,1,1,0,2,1,0,0,1,1,0,0,0,1,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,0,1,1,2,3,1,1,1,1,1,1,0,1,1,3,0,],
+[1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,3,1,1,1,1,1,1,1,1,3,1,1,2,],
+[2,2,2,1,1,1,1,1,1,1,3,1,1,1,1,1,1,3,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,3,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,3,1,1,1,1,1,0,1,1,1,1,1,1,1,1,3,2,3,1,0,3,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,0,3,1,1,1,1,1,1,1,0,2,1,3,0,2,2,],
+[1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,3,1,1,1,1,0,1,1,3,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,0,1,1,1,1,1,3,1,1,0,1,1,1,1,3,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,],
+]);
+display_maze("rec_axis_split_1",27,41,[
+[2,3,1,1,2,2,2,3,2,2,2,2,2,3,2,3,1,2,2,2,3,1,2,2,2,2,2,3,3,0,3,0,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,2,3,3,2,3,0,2,2,2,2,2,2,3,2,3,0,3,2,2,2,2,2,2,2,2,],
+[1,0,1,3,0,2,2,2,2,2,3,2,2,2,2,0,0,0,0,2,1,2,2,2,2,1,2,0,2,0,3,0,0,3,0,2,2,2,2,2,2,],
+[1,1,1,3,0,2,3,2,2,2,2,2,2,2,2,3,2,3,1,0,1,2,2,3,2,3,0,1,1,2,3,0,3,3,0,2,2,2,2,2,2,],
+[1,1,1,1,2,3,2,2,2,2,2,2,2,2,2,2,3,2,3,2,1,2,2,2,2,3,3,2,2,2,1,3,2,3,2,2,2,2,3,2,2,],
+[1,1,1,3,0,0,2,2,2,2,0,2,2,2,2,0,0,3,0,0,3,0,1,0,0,2,0,3,1,0,1,0,0,2,0,2,2,2,2,2,2,],
+[2,2,3,3,0,2,2,2,2,2,2,2,2,2,2,3,2,2,2,2,1,1,1,3,0,2,2,1,1,2,3,2,1,3,0,2,2,2,2,2,2,],
+[3,2,2,3,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,3,1,1,0,2,2,1,1,2,2,3,1,1,2,2,2,2,2,2,2,],
+[2,2,2,1,0,2,2,2,2,2,2,2,2,2,2,0,3,2,2,2,1,3,1,1,0,2,2,1,3,0,0,0,3,1,0,2,2,2,2,2,2,],
+[2,3,3,1,0,3,2,2,2,2,2,2,3,2,2,2,2,2,2,2,1,2,2,3,0,3,2,3,2,2,3,3,2,3,0,2,2,2,2,3,2,],
+[2,2,3,1,1,2,2,2,2,2,3,2,2,2,2,3,2,3,2,2,3,0,2,3,0,2,2,2,1,0,2,2,3,1,0,2,2,2,2,2,2,],
+[2,2,3,3,2,2,2,2,3,2,2,2,2,2,2,2,2,2,2,2,1,3,3,1,3,2,2,2,2,3,2,2,1,3,0,2,2,2,2,2,2,],
+[0,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,2,1,1,1,0,0,1,0,0,2,1,1,0,2,0,1,1,0,2,2,2,2,0,2,],
+[1,2,2,2,2,2,2,2,2,2,2,2,2,3,0,2,2,2,2,2,1,1,3,1,1,1,1,3,1,0,2,2,2,3,0,2,2,2,2,2,2,],
+[1,3,3,2,2,2,2,2,3,2,2,2,2,1,2,2,2,2,2,2,3,0,2,2,2,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,2,],
+[1,2,0,1,0,2,2,3,0,0,2,3,1,1,2,2,2,2,2,2,1,1,1,1,2,1,1,1,1,0,1,2,2,3,0,3,2,2,2,2,2,],
+[3,0,2,3,2,2,2,1,3,0,2,2,2,3,2,2,2,2,2,2,2,3,2,3,2,2,3,1,3,0,1,2,3,3,2,2,2,2,2,2,2,],
+[1,2,2,2,3,2,2,1,1,2,3,2,1,0,2,2,2,2,3,2,1,2,2,2,2,3,0,1,1,0,1,2,2,2,2,2,2,2,2,2,2,],
+[2,2,3,2,2,2,3,3,1,0,2,2,1,3,0,2,2,2,2,2,1,2,3,2,2,3,1,2,2,2,3,2,2,2,2,2,2,2,2,2,2,],
+[1,1,0,0,0,1,0,1,1,2,0,0,3,1,0,2,2,3,0,0,3,0,0,0,1,1,0,1,1,0,0,2,0,0,3,2,2,2,2,0,2,],
+[3,0,1,3,0,1,1,1,3,1,3,2,3,1,2,2,2,1,1,2,1,2,1,3,0,2,3,2,1,2,3,2,3,1,0,2,3,2,2,2,2,],
+[1,3,3,1,0,1,2,1,1,2,2,2,2,3,3,2,2,2,2,2,1,3,3,2,3,3,2,2,2,2,2,2,3,1,0,2,2,3,2,3,2,],
+[1,0,1,1,1,1,1,1,3,0,2,0,2,0,0,3,2,1,1,2,1,0,0,1,2,0,0,1,1,0,0,3,1,3,0,2,2,2,2,2,2,],
+[3,3,3,1,0,2,3,2,1,2,3,2,1,3,0,2,2,2,3,2,3,1,1,1,0,3,1,1,1,0,2,2,3,3,2,2,2,2,2,2,2,],
+[2,2,3,1,0,1,0,1,1,2,0,3,3,1,0,2,3,1,2,0,1,3,1,1,0,1,3,1,1,0,3,0,2,2,2,2,2,2,2,2,2,],
+[2,2,3,3,1,3,3,2,3,2,1,2,1,1,2,2,2,2,2,2,3,1,1,1,0,1,1,1,1,2,3,0,2,2,2,2,2,2,2,2,2,],
+[0,0,0,1,0,0,0,1,0,0,1,0,1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,],
+]);
+
+
+display_maze("prim",27,41,[
+[2,2,2,1,2,2,2,2,1,2,1,3,2,2,2,1,3,2,3,0,2,2,1,3,0,2,3,0,3,0,2,1,3,1,1,1,0,1,3,1,0,],
+[2,1,2,1,2,2,1,3,0,1,1,0,2,2,3,0,0,1,2,3,0,2,1,3,1,0,2,2,2,3,0,3,1,1,0,3,0,1,2,3,0,],
+[2,2,2,2,1,1,1,3,0,2,1,2,2,1,2,3,0,1,3,1,0,2,2,2,2,2,2,1,3,1,0,3,1,0,2,2,2,2,2,3,0,],
+[1,1,2,3,3,1,1,1,1,1,2,1,3,3,2,3,0,1,2,1,3,1,2,2,3,1,1,0,2,3,1,1,1,0,3,0,2,3,1,1,0,],
+[2,1,2,0,0,1,2,3,3,1,2,2,0,0,1,1,1,2,3,0,0,1,2,3,0,1,1,2,1,3,1,1,1,1,0,1,2,2,2,3,0,],
+[2,3,2,1,3,0,1,0,0,3,2,1,2,1,2,1,3,3,1,2,2,2,3,0,3,1,0,2,1,2,3,0,2,2,2,1,2,2,3,1,0,],
+[2,0,2,2,3,1,1,1,1,0,3,2,1,1,1,1,0,0,1,3,1,1,2,3,0,2,1,3,0,2,2,1,3,0,2,2,3,0,3,1,0,],
+[3,0,1,1,0,1,2,2,2,1,0,2,3,0,2,1,1,1,1,0,1,1,2,3,0,2,2,2,2,2,2,3,1,1,3,3,1,1,3,0,2,],
+[2,3,0,2,2,1,1,1,3,1,2,2,3,0,2,1,3,3,0,2,2,1,2,2,2,3,0,3,1,1,1,3,3,0,2,3,1,0,3,1,2,],
+[2,2,2,1,3,2,1,2,1,0,1,1,3,1,1,3,0,2,3,0,2,2,2,2,3,0,2,3,1,3,0,0,3,2,0,3,1,0,0,1,2,],
+[1,2,1,2,0,2,1,1,2,2,2,1,0,2,1,0,3,3,1,2,1,1,1,3,1,3,3,3,0,3,1,2,2,3,0,3,3,1,3,0,2,],
+[3,3,1,1,1,3,3,1,1,3,0,2,1,1,2,1,0,2,3,2,2,3,1,2,1,0,2,1,2,1,0,0,0,2,1,2,2,2,3,0,2,],
+[0,2,2,1,3,0,0,2,2,3,1,3,1,1,2,1,1,0,0,2,3,1,0,1,3,2,0,1,3,1,3,3,0,2,1,0,2,2,2,3,2,],
+[1,0,3,1,3,0,1,1,3,0,1,0,3,3,3,2,1,1,2,1,1,3,1,2,0,3,1,2,3,2,0,1,2,3,2,1,3,2,2,0,0,],
+[2,2,0,1,0,2,1,1,0,1,3,1,0,0,0,3,1,1,3,1,1,3,0,2,1,0,1,0,0,0,2,3,0,0,0,3,2,2,0,3,0,],
+[3,3,1,1,3,1,3,0,2,1,0,1,2,2,1,0,1,3,2,1,3,2,3,3,0,3,1,3,2,3,0,3,1,2,1,0,2,0,2,3,0,],
+[2,0,3,2,2,1,3,1,1,1,3,2,3,1,1,1,2,0,3,2,2,0,0,1,3,3,0,0,1,2,2,0,2,2,1,1,3,1,1,0,2,],
+[0,1,2,1,3,0,0,2,3,1,2,3,2,3,3,1,3,3,0,2,3,2,2,2,0,1,1,1,2,1,1,2,2,3,3,0,3,3,1,3,2,],
+[2,3,0,3,0,2,1,2,0,1,0,0,0,0,0,2,2,1,2,0,2,1,3,3,3,1,3,0,3,1,0,3,0,2,0,2,2,3,0,2,2,],
+[1,2,3,0,1,3,1,2,1,2,1,3,1,1,1,1,2,3,2,1,3,0,0,0,1,2,2,2,1,2,2,3,2,1,0,3,2,0,1,2,2,],
+[1,2,0,1,3,0,2,2,1,2,1,0,2,3,1,1,2,2,0,3,3,1,0,1,1,2,3,3,2,1,0,0,1,3,2,0,1,2,3,2,2,],
+[3,0,3,1,2,2,2,3,3,1,0,2,3,1,2,1,2,0,1,2,3,3,1,0,1,2,0,2,1,1,3,1,2,2,0,1,1,0,2,2,2,],
+[0,1,2,1,2,1,2,2,3,3,1,3,3,0,0,1,2,3,3,2,2,3,3,0,3,2,3,3,1,0,1,2,0,1,0,1,1,1,2,0,2,],
+[3,1,2,1,0,3,1,0,2,0,3,0,1,1,0,3,0,2,0,2,2,0,2,3,2,2,2,3,1,3,0,1,1,3,0,1,3,1,3,2,2,],
+[2,3,2,2,2,2,3,3,0,1,1,3,2,1,3,2,1,1,2,2,0,1,2,2,2,2,0,1,2,3,2,3,0,3,1,0,0,3,0,0,0,],
+[2,0,2,3,1,0,2,1,0,3,1,2,0,1,2,0,1,2,2,3,0,3,2,2,0,3,1,2,2,0,1,3,2,0,2,1,3,3,1,1,0,],
+[0,1,0,0,1,1,1,0,1,0,1,0,1,1,0,1,1,1,0,1,0,0,0,1,0,1,0,0,1,1,0,0,1,1,1,0,0,1,1,1,0,],
+]);
+
+
+
+display_maze("dfs",27,41,[
+[2,3,1,3,1,1,1,1,2,1,3,1,2,3,1,2,3,1,1,2,3,3,2,3,2,1,1,1,1,3,0,3,1,3,1,2,1,3,1,1,2,],
+[3,0,3,0,3,0,3,2,1,2,1,2,2,1,0,2,2,3,2,1,0,2,1,0,1,1,1,1,2,3,1,1,0,2,2,1,2,1,1,2,0,],
+[2,3,0,2,3,1,0,3,0,1,1,0,1,1,2,2,2,2,1,1,1,0,3,3,1,0,3,1,0,2,3,1,2,2,3,0,1,1,2,3,2,],
+[2,2,1,1,1,1,0,1,1,1,1,2,3,1,1,0,2,1,1,2,3,0,2,1,1,1,0,2,3,0,2,2,1,0,3,1,1,1,0,2,2,],
+[2,1,2,3,1,1,1,2,3,1,2,2,2,3,1,1,0,2,3,0,3,1,0,1,1,1,2,3,0,3,0,3,1,2,1,2,3,1,1,0,2,],
+[0,3,0,2,3,1,2,1,1,0,2,2,2,1,2,1,3,2,2,1,2,3,1,1,1,2,3,1,0,2,3,0,3,1,0,2,1,1,3,0,2,],
+[3,0,3,1,0,3,0,3,1,1,0,2,3,0,1,2,2,2,1,2,1,0,3,1,2,2,0,3,1,0,2,2,1,1,2,2,1,3,0,3,2,],
+[2,3,0,3,2,1,0,1,2,3,1,1,0,3,2,1,0,2,2,1,1,2,1,2,1,1,1,0,3,1,1,1,2,3,0,1,2,0,3,0,2,],
+[2,2,2,2,2,3,1,2,2,2,3,1,1,0,3,2,3,0,3,2,2,2,1,1,0,3,2,1,1,0,3,2,0,3,3,2,1,1,0,3,0,],
+[3,0,2,2,1,0,2,2,2,0,2,3,0,3,0,0,2,3,2,1,2,1,1,1,2,2,1,1,2,3,0,1,2,2,2,1,3,1,0,2,2,],
+[1,1,2,2,1,3,1,0,2,3,0,1,2,2,3,1,0,2,2,2,1,3,1,0,3,1,1,0,1,1,0,3,0,0,1,2,2,3,1,0,2,],
+[2,3,0,1,2,2,1,3,2,1,1,2,2,2,2,3,1,0,2,1,3,0,3,2,0,3,1,1,2,3,1,0,1,3,3,0,0,2,3,3,2,],
+[2,1,2,2,2,1,1,2,0,3,2,1,2,1,0,1,1,0,1,2,1,0,2,2,3,0,2,3,0,2,1,1,3,0,0,3,2,2,2,2,0,],
+[3,1,0,2,2,3,2,0,3,0,3,0,2,1,3,1,1,1,1,2,2,3,0,1,0,3,1,0,3,1,1,2,3,1,2,2,1,0,0,1,2,],
+[2,3,1,2,2,2,1,2,2,2,1,2,1,2,1,2,3,2,3,0,2,2,2,3,1,0,3,1,0,2,3,0,1,2,2,2,3,1,1,1,2,],
+[2,2,3,0,1,0,2,2,2,1,2,2,3,0,3,0,2,0,2,2,1,0,2,1,2,2,2,1,3,2,1,2,1,2,1,0,2,3,2,3,0,],
+[1,0,2,3,1,1,0,2,1,2,2,1,0,1,2,2,3,2,2,3,0,3,1,2,2,1,1,1,0,1,0,1,2,2,3,1,2,2,2,1,2,],
+[3,1,0,1,1,2,3,0,3,0,3,3,1,1,0,3,0,1,1,0,3,0,2,1,0,3,2,3,2,3,1,2,2,1,0,3,0,2,2,2,2,],
+[1,1,1,1,2,2,1,1,0,3,0,2,3,1,2,2,3,1,1,1,0,3,1,1,1,2,1,0,1,0,3,0,2,2,3,0,2,2,2,1,0,],
+[3,1,0,3,0,3,1,1,0,3,0,2,2,2,2,0,1,1,1,2,1,1,1,1,2,1,2,2,3,1,0,3,0,1,3,1,0,2,1,1,2,],
+[3,1,2,2,3,2,3,1,1,0,3,0,2,2,1,1,1,3,2,1,1,2,3,2,2,3,0,2,2,1,1,1,3,2,0,3,2,3,0,3,2,],
+[1,2,2,2,2,0,2,3,1,0,1,3,0,3,2,2,3,0,0,3,2,2,2,0,2,1,2,2,1,2,3,2,0,1,1,0,1,2,3,0,2,],
+[2,2,1,0,1,1,1,0,3,1,2,1,1,0,2,2,2,3,1,0,1,0,1,1,1,0,2,3,2,1,0,1,1,1,1,1,2,0,2,3,0,],
+[2,2,3,1,1,1,1,2,1,2,1,2,1,2,2,2,2,2,1,1,3,1,2,3,3,1,0,2,3,0,3,1,3,3,1,0,1,1,0,2,2,],
+[3,0,1,1,1,2,2,1,2,2,2,1,2,3,1,0,2,2,3,2,2,3,0,2,0,3,2,0,2,3,0,3,0,2,3,1,2,3,2,2,2,],
+[1,1,2,3,1,0,3,2,1,0,3,1,0,0,3,2,2,2,2,2,2,1,2,1,1,0,2,3,0,2,2,2,1,0,2,2,1,0,2,1,2,],
+[1,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,0,1,1,0,],
+]);
+
+
+
+display_maze("bfs",27,41,[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,3,3,3,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,2,2,2,2,2,2,2,2,2,2,2,2,3,3,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,0,],
+[1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,0,],
+[1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,1,1,1,1,1,0,],
+[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,],
+]);
+
+
+display_maze("dijkstra",27,41,[
+[3,1,1,3,0,2,2,2,2,1,2,2,1,3,1,1,3,3,0,2,2,2,3,0,2,3,0,2,3,1,1,1,0,1,3,1,3,1,1,1,0,],
+[0,1,1,1,1,3,1,3,0,1,1,2,1,0,1,1,0,2,2,2,1,2,2,3,0,3,0,2,3,0,3,0,2,3,0,2,0,2,2,3,0,],
+[3,1,2,2,2,0,1,2,1,2,1,2,2,2,1,1,1,3,0,2,1,1,2,2,3,0,2,3,1,3,0,2,2,3,0,3,1,1,1,3,0,],
+[0,1,2,2,1,1,2,1,1,2,2,1,1,2,1,2,2,1,3,0,2,2,3,0,1,3,1,0,2,0,3,1,1,1,0,3,1,1,0,3,0,],
+[3,1,2,2,1,2,3,0,1,2,2,1,2,2,2,2,1,2,3,0,2,2,3,1,0,3,3,0,2,1,3,1,1,0,2,2,2,3,0,1,0,],
+[0,2,1,3,1,3,3,2,2,2,2,1,1,2,1,2,2,3,3,0,2,3,3,0,2,0,3,0,3,0,2,2,3,0,3,1,1,1,0,2,2,],
+[2,2,2,1,0,0,0,3,1,1,3,0,2,1,2,2,2,0,2,1,3,0,0,2,1,2,3,1,3,1,1,1,1,1,1,3,2,3,0,3,0,],
+[1,3,0,1,2,1,2,0,1,1,1,1,3,0,2,1,2,1,1,1,3,0,2,2,1,3,3,0,2,3,1,1,1,1,0,0,2,3,0,3,0,],
+[1,2,2,2,1,2,2,2,1,1,2,1,1,2,2,1,1,1,2,2,2,2,2,2,3,0,1,0,0,3,1,1,1,1,1,0,0,3,0,2,2,],
+[3,0,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,3,3,0,2,2,2,3,0,2,2,3,0,2,2,1,3,1,1,3,1,1,1,0,],
+[3,0,1,1,2,1,1,2,2,2,1,1,3,1,1,2,1,2,0,2,2,3,1,1,1,1,1,1,1,1,3,1,1,3,1,0,0,2,1,3,0,],
+[1,2,2,2,3,0,1,1,2,2,2,1,0,1,3,1,1,2,2,2,2,2,2,3,1,1,0,2,3,0,0,2,2,1,3,0,2,3,1,0,2,],
+[2,1,1,3,0,2,2,1,2,2,2,1,1,1,2,1,3,3,1,2,2,2,3,0,3,1,2,3,3,1,1,1,3,0,0,3,1,1,1,1,0,],
+[1,2,1,3,2,1,2,1,1,3,1,3,3,1,2,1,0,0,1,1,3,1,1,3,3,0,1,0,1,1,1,0,0,3,1,1,1,3,1,0,2,],
+[2,2,2,0,1,3,3,2,1,1,0,0,0,2,0,1,2,1,3,1,3,3,0,2,3,3,1,3,1,3,2,2,3,3,1,1,0,3,1,1,0,],
+[2,2,2,1,2,0,2,0,2,2,2,1,2,2,1,2,1,1,0,3,0,2,2,0,0,0,1,1,2,2,3,3,0,1,1,1,2,1,0,3,0,],
+[3,1,1,1,3,3,3,3,1,1,1,3,1,1,3,3,1,1,3,3,2,1,3,1,0,3,1,0,0,0,0,1,0,2,3,2,0,2,2,3,0,],
+[3,0,3,2,2,0,0,2,1,3,3,3,0,1,2,0,3,1,2,2,3,2,3,3,3,0,3,1,0,2,3,1,0,2,2,0,3,1,3,2,2,],
+[2,1,2,3,1,0,3,0,3,2,0,2,1,3,0,1,2,1,2,2,0,2,0,2,3,3,3,1,0,3,3,1,3,1,3,1,0,2,0,1,2,],
+[2,1,2,2,3,3,2,1,0,0,3,1,0,0,3,1,3,0,2,2,3,3,2,2,2,0,1,1,3,0,3,2,3,0,1,1,1,3,3,0,2,],
+[3,0,2,2,0,0,2,3,1,3,0,1,3,3,0,1,2,3,2,0,0,0,0,2,2,3,3,0,0,2,0,0,1,0,2,3,0,0,1,0,0,],
+[3,0,0,3,0,2,2,2,1,2,3,1,2,2,3,1,2,0,3,3,2,1,3,2,3,2,3,3,1,3,1,0,3,1,1,0,3,1,0,3,0,],
+[0,1,1,0,1,3,0,0,1,0,0,3,0,2,0,1,2,1,2,0,2,3,2,2,0,2,0,1,2,3,3,1,3,1,1,3,1,0,3,1,0,],
+[3,3,3,1,3,0,1,2,2,2,2,2,3,3,2,1,2,3,3,2,2,2,2,2,1,3,1,2,2,2,3,0,3,0,1,3,1,1,3,1,0,],
+[0,2,0,3,0,1,1,3,3,3,3,2,2,0,2,1,2,2,0,2,2,0,2,2,1,3,0,2,2,0,3,2,1,0,2,1,1,2,3,1,0,],
+[1,2,1,2,1,1,3,2,2,0,2,2,1,0,2,1,0,3,2,0,2,3,2,0,1,3,0,0,1,2,2,1,1,1,3,3,0,2,1,3,0,],
+[1,0,1,0,1,1,0,0,0,1,0,1,1,0,1,1,0,0,1,0,0,0,1,0,1,1,1,1,0,0,1,1,1,0,0,1,0,1,0,1,0,],
+]);
+
+
+display_maze("hunt_and_kill",27,41,[
+[1,2,1,2,2,1,2,2,1,3,0,1,2,1,2,3,1,0,2,1,3,2,2,1,3,1,0,2,1,2,2,2,1,3,1,0,1,3,3,1,0,],
+[2,1,1,1,1,2,1,2,2,2,1,1,2,1,1,2,3,0,2,3,0,1,0,1,2,2,2,2,3,1,3,0,2,1,3,0,3,2,1,1,0,],
+[1,2,3,0,1,2,1,2,1,1,1,2,1,2,1,2,1,2,2,2,2,1,2,1,2,3,0,3,1,0,0,1,2,1,3,1,0,1,1,1,0,],
+[3,0,2,2,1,1,2,3,0,2,1,1,2,3,0,3,0,3,1,1,0,1,3,0,2,3,1,1,0,2,2,1,2,2,2,1,2,2,3,1,0,],
+[2,1,3,1,0,1,1,1,3,3,1,1,3,1,0,2,3,1,1,0,3,0,3,0,2,2,2,3,0,2,2,2,3,0,1,2,3,1,0,3,0,],
+[2,2,2,2,2,2,1,1,2,0,1,2,2,3,0,1,3,0,3,0,3,0,2,1,3,1,3,0,3,0,3,1,3,3,1,3,1,1,1,0,2,],
+[3,1,1,2,2,3,0,1,0,2,3,3,1,1,1,1,1,3,1,3,0,1,1,3,0,2,0,2,3,0,2,2,0,3,0,1,2,2,3,0,2,],
+[0,2,1,1,2,2,3,2,1,1,0,2,1,3,3,1,2,2,2,3,0,2,2,3,1,1,0,2,3,0,3,1,2,2,3,0,1,0,3,1,2,],
+[3,3,0,2,2,1,0,2,1,2,1,0,1,2,0,2,1,3,0,0,2,3,0,2,1,2,2,2,3,0,2,2,0,1,1,0,3,1,1,0,0,],
+[2,3,1,2,2,1,1,3,0,3,1,0,2,0,2,1,1,3,0,1,2,2,1,3,1,1,0,3,1,3,1,0,3,1,2,2,2,1,3,1,0,],
+[0,0,2,1,3,3,0,1,2,2,2,2,2,1,1,1,2,1,2,2,3,0,2,3,0,3,1,1,0,0,3,1,0,2,1,0,2,3,1,0,2,],
+[3,1,1,3,0,1,2,1,1,2,3,0,2,1,2,2,2,2,1,3,1,1,0,1,2,2,2,2,2,1,2,3,1,0,3,3,1,3,1,3,0,],
+[0,1,2,2,3,1,1,2,2,1,1,2,1,3,3,3,1,3,1,1,3,1,3,3,1,3,1,2,3,0,3,1,1,1,0,3,0,1,2,2,2,],
+[1,1,3,0,0,1,3,1,2,2,3,3,3,0,2,1,0,0,1,2,3,2,0,0,1,3,0,1,1,1,3,3,3,3,0,2,3,2,0,3,0,],
+[1,2,3,0,1,3,0,1,3,3,2,2,2,3,2,3,0,2,1,3,0,1,1,2,1,3,3,3,3,2,2,2,2,3,0,3,0,3,0,1,2,],
+[1,1,0,1,1,0,1,1,0,0,2,0,0,2,0,1,1,1,1,3,3,3,0,1,2,0,2,0,0,2,2,2,2,2,2,1,0,3,0,2,0,],
+[2,2,1,1,3,3,1,2,1,3,2,3,1,2,2,1,3,3,1,2,0,1,3,0,1,2,1,3,2,2,0,0,2,1,0,1,2,0,1,3,2,],
+[1,2,1,2,0,0,1,3,1,0,0,0,3,0,1,1,0,0,1,3,1,2,1,2,1,3,0,0,2,3,1,2,2,3,1,3,1,3,1,2,2,],
+[3,1,3,3,1,1,1,2,2,1,1,1,3,0,1,1,3,1,3,3,2,1,0,3,0,3,0,1,0,0,1,2,3,1,2,1,2,1,2,0,0,],
+[0,1,2,2,3,3,3,2,1,3,1,3,0,3,1,1,2,3,2,0,0,2,3,1,2,3,3,1,0,2,2,0,2,1,3,0,0,1,1,3,0,],
+[3,3,2,0,0,0,0,0,3,2,1,1,2,0,1,1,0,2,3,1,1,0,1,0,0,2,1,3,0,3,3,0,3,2,3,0,3,0,1,3,0,],
+[2,0,1,0,3,1,3,1,2,3,2,3,0,1,3,2,1,2,3,3,1,1,3,3,0,1,2,1,1,2,0,3,2,0,3,3,1,0,3,3,0,],
+[0,3,3,3,0,3,1,0,0,2,2,0,1,2,0,3,1,0,2,3,3,0,0,3,2,3,3,0,2,1,0,0,1,2,0,1,3,0,2,3,0,],
+[1,0,2,1,0,0,1,1,3,0,0,2,1,1,3,2,1,3,0,2,3,3,0,0,2,2,1,1,3,1,1,0,1,3,0,1,3,0,2,2,2,],
+[2,1,0,1,2,2,2,1,0,1,1,3,1,1,2,2,2,1,2,2,0,3,2,3,2,1,1,2,3,1,1,0,3,2,2,1,1,0,0,3,2,],
+[3,1,1,3,3,1,3,1,1,2,2,2,3,1,0,0,2,1,2,1,0,2,0,2,0,1,3,2,1,1,0,2,2,3,2,2,3,0,2,2,0,],
+[0,1,1,0,0,1,1,0,1,1,1,0,0,1,1,1,1,1,1,1,0,1,0,1,1,0,0,1,1,1,0,1,0,0,1,1,1,0,1,1,0,],
+]);
+
+
+
+display_maze("binary",27,41,[
+[2,2,1,1,1,1,1,2,2,2,2,2,1,2,2,1,1,2,1,2,1,2,1,2,2,2,2,2,1,2,2,2,1,1,1,2,1,1,1,2,2,],
+[2,1,1,1,1,1,2,2,1,1,1,2,1,2,1,2,2,1,2,1,2,2,2,2,2,1,1,2,1,2,1,2,1,1,2,1,2,1,2,2,2,],
+[2,2,1,2,2,2,1,2,2,1,2,1,2,1,2,2,1,1,2,1,1,1,1,2,1,1,1,1,2,2,2,2,1,2,1,1,2,1,2,1,2,],
+[1,1,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,1,2,1,2,1,1,1,1,1,2,1,1,2,1,1,2,1,2,1,1,2,2,2,2,],
+[2,1,1,2,1,2,1,1,1,1,2,1,1,2,1,2,2,1,2,1,2,2,1,2,2,1,2,1,1,1,1,2,2,1,1,2,1,1,2,1,2,],
+[1,2,2,2,2,1,1,1,2,2,2,1,2,1,2,2,1,2,2,1,1,1,2,1,2,1,1,2,2,2,1,2,1,2,2,2,2,2,2,1,2,],
+[1,1,2,2,1,2,2,2,1,2,2,2,2,1,1,2,1,2,2,2,2,1,2,1,2,2,2,2,1,2,2,2,1,2,1,1,1,2,2,1,2,],
+[2,2,2,2,2,2,2,2,1,2,1,1,1,2,1,2,1,2,1,1,1,2,1,2,2,1,2,1,2,1,1,1,2,1,2,2,2,2,1,2,2,],
+[1,2,1,2,2,1,1,1,1,1,2,2,1,1,1,1,1,1,2,1,1,1,2,1,2,1,2,1,1,1,1,2,1,2,1,2,2,1,1,2,2,],
+[2,1,1,2,1,1,2,1,1,2,1,1,2,2,2,2,1,1,1,2,1,2,2,2,2,1,1,1,1,2,1,2,2,2,2,2,2,1,2,2,2,],
+[1,2,2,2,2,1,2,2,1,1,2,2,2,2,2,1,2,2,1,2,2,1,1,1,2,1,1,2,2,2,2,2,2,1,1,1,2,1,2,2,2,],
+[1,2,1,2,1,1,2,2,1,1,1,1,1,2,2,1,2,2,1,1,1,2,2,2,1,2,1,1,1,2,1,2,1,1,1,1,1,2,2,2,2,],
+[1,2,1,2,2,1,1,1,1,1,1,1,1,2,1,2,2,1,1,2,1,2,2,2,2,1,2,2,2,1,1,2,1,1,1,2,2,1,2,2,2,],
+[2,2,2,2,2,1,1,2,1,2,1,2,2,2,2,2,1,1,1,2,1,1,2,2,1,1,1,2,2,2,1,1,2,2,2,1,2,1,1,1,2,],
+[1,2,1,2,1,2,2,1,1,1,2,1,2,1,1,2,1,2,1,2,2,2,1,1,1,2,1,1,2,1,1,2,2,1,1,1,1,2,1,1,2,],
+[2,1,2,2,1,2,2,1,2,2,2,1,2,1,2,1,1,2,2,1,2,1,2,1,1,2,1,1,1,1,1,2,1,2,2,1,1,1,1,1,2,],
+[1,1,2,1,2,2,1,2,2,1,1,2,2,1,1,2,1,1,2,1,1,1,1,2,2,2,1,1,2,1,2,2,1,1,2,1,1,2,2,2,2,],
+[2,1,2,1,1,1,1,1,2,2,1,2,2,1,2,1,1,2,1,1,1,2,1,2,2,1,2,1,2,1,1,2,1,2,2,2,2,2,2,1,2,],
+[1,2,1,1,1,1,1,2,1,1,1,1,1,2,2,2,1,2,1,1,2,2,1,1,1,2,2,1,2,2,1,2,2,1,2,2,2,2,2,2,2,],
+[2,2,2,1,1,1,1,1,2,1,2,1,1,1,2,1,2,2,2,2,2,1,1,1,2,2,2,1,1,1,2,2,1,1,2,1,2,2,1,1,2,],
+[1,1,1,1,2,1,2,1,2,1,1,2,1,1,1,1,2,1,1,2,2,1,2,2,2,1,1,2,1,1,1,1,2,1,1,1,1,1,2,2,2,],
+[2,1,2,2,1,2,1,1,2,2,2,2,2,2,2,2,2,1,2,1,1,1,2,2,1,2,2,1,1,2,2,2,2,1,1,1,2,1,1,1,2,],
+[1,1,2,2,2,1,1,2,2,1,2,2,2,1,1,2,1,1,2,2,2,2,1,2,2,1,1,1,2,2,1,2,2,2,1,1,2,1,2,1,2,],
+[1,1,1,2,1,2,2,1,2,1,1,1,1,2,2,2,1,2,1,2,2,2,1,1,2,1,2,2,2,1,1,2,1,2,1,1,1,2,1,2,2,],
+[1,2,1,1,2,2,1,1,2,2,1,1,2,1,2,2,1,1,1,1,2,2,1,1,1,1,1,2,1,1,2,2,2,2,2,1,1,2,2,2,2,],
+[2,2,2,2,1,1,2,1,1,2,2,2,2,2,2,2,1,2,1,1,1,2,2,2,1,1,2,2,2,1,2,1,2,1,2,2,1,2,2,1,2,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+]);
+
+display_maze("sidewinder_0",27,41,[
+[1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+]);
+
+
+
+display_maze("sidewinder_0_5",27,41,[
+[3,1,1,3,3,1,3,1,3,1,3,1,3,1,3,3,3,3,3,3,1,1,1,1,3,1,3,1,3,3,1,1,1,3,3,3,1,3,1,3,2,],
+[3,3,0,0,0,3,2,3,0,1,2,3,1,2,0,0,0,2,0,1,1,3,3,2,3,2,2,3,2,3,0,3,1,2,0,0,1,1,2,2,2,],
+[0,3,3,2,1,0,0,0,1,1,2,1,0,3,0,1,1,1,3,2,3,0,2,0,2,2,2,2,0,2,1,1,0,3,3,3,0,3,0,2,0,],
+[1,2,2,0,3,1,1,3,3,1,1,1,0,2,3,3,3,3,0,2,2,3,1,2,0,2,2,2,1,2,1,3,3,2,0,2,3,2,3,3,0,],
+[3,2,2,1,3,0,3,2,2,3,1,3,1,0,0,2,0,0,3,2,0,0,3,3,2,2,2,3,0,2,1,2,2,3,0,2,2,0,0,1,2,],
+[0,0,3,2,0,1,2,2,2,2,1,3,0,3,3,0,1,1,2,3,1,2,0,2,0,2,2,0,3,1,0,0,0,1,2,2,1,2,1,1,2,],
+[1,3,0,3,0,1,2,0,0,0,3,1,0,0,2,3,3,3,0,0,1,3,2,3,2,2,0,3,0,3,1,3,3,3,0,1,0,1,0,3,2,],
+[3,2,1,1,1,2,0,1,1,3,3,1,2,1,0,2,0,0,1,1,1,0,2,0,0,3,0,2,1,1,0,2,2,1,3,3,3,1,0,2,0,],
+[2,3,0,1,3,0,1,3,1,2,2,3,1,3,0,3,1,3,2,3,3,1,2,1,1,2,1,3,3,0,1,2,0,1,0,2,1,2,1,3,0,],
+[2,3,3,2,3,1,2,1,0,0,2,3,0,2,3,1,2,0,0,0,1,2,1,2,3,0,1,0,3,0,3,3,3,1,2,2,1,3,2,3,2,],
+[2,2,2,2,1,2,2,1,1,1,0,3,2,2,2,3,3,3,0,3,1,0,1,2,3,1,2,1,1,0,0,0,3,2,2,2,3,0,0,2,2,],
+[0,0,0,2,1,0,3,1,1,1,0,0,0,0,0,0,2,0,1,1,1,1,0,2,0,3,2,3,3,1,3,3,2,0,2,0,2,3,3,2,2,],
+[3,3,3,2,1,3,2,1,1,1,1,1,3,3,3,1,1,3,3,1,1,2,3,3,2,2,2,0,2,1,2,2,1,0,0,3,0,0,0,0,2,],
+[2,2,0,0,3,2,0,3,3,1,3,1,2,0,1,1,2,0,1,3,0,0,2,2,2,2,0,1,3,2,2,3,3,0,3,3,0,1,1,1,0,],
+[2,2,3,3,2,1,0,2,2,3,1,0,0,1,3,1,2,3,1,3,2,3,2,0,2,1,2,1,0,0,0,2,0,1,0,3,1,1,3,1,2,],
+[2,0,2,2,3,2,1,2,2,3,3,1,1,0,1,2,2,0,1,2,0,2,1,0,3,2,3,1,1,1,0,3,1,2,3,1,2,1,0,1,0,],
+[3,0,2,0,0,2,1,0,2,0,3,0,3,1,1,2,3,2,1,0,3,2,1,3,0,0,3,3,3,3,2,0,1,0,0,3,3,1,1,3,0,],
+[2,1,1,2,3,3,0,3,3,2,0,3,1,2,1,0,2,2,3,3,2,0,1,1,2,1,2,0,2,2,3,1,1,3,0,2,2,3,3,1,2,],
+[2,1,1,2,2,2,3,0,2,0,1,2,3,1,3,0,0,0,2,2,1,1,1,2,1,0,2,1,0,0,1,2,1,0,1,0,2,2,1,2,2,],
+[1,1,2,2,0,0,3,0,1,3,2,2,0,3,0,1,3,1,2,1,0,3,3,3,0,1,1,1,1,2,3,1,2,1,3,1,0,1,0,0,2,],
+[1,1,0,2,3,3,0,3,1,0,0,1,2,3,0,3,0,1,3,3,0,2,2,1,3,3,1,3,0,0,0,1,0,3,1,2,1,3,1,3,2,],
+[1,3,3,2,0,1,0,3,1,3,1,0,2,0,3,3,2,3,2,1,0,2,2,1,0,2,3,3,1,1,0,1,3,3,2,0,3,3,0,0,2,],
+[3,0,2,2,3,3,3,3,0,0,3,3,3,0,0,0,2,0,0,3,3,0,0,3,3,2,2,1,1,3,3,2,2,2,2,1,0,1,3,0,0,],
+[0,1,2,0,0,0,2,2,3,1,0,2,3,3,2,3,3,1,2,0,1,2,3,2,2,2,1,1,2,0,2,0,2,2,1,3,0,3,1,3,0,],
+[3,1,2,1,1,3,2,0,1,3,0,2,0,0,0,2,0,3,3,3,2,0,2,2,0,2,1,1,2,1,1,2,2,3,0,3,0,0,1,3,0,],
+[2,1,1,2,1,2,1,0,1,2,1,3,0,3,1,2,1,2,2,0,1,0,2,0,3,1,0,1,1,2,3,2,2,3,0,1,3,1,2,3,2,],
+[1,0,1,1,0,0,1,1,1,1,0,1,0,1,0,1,0,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,],
+]);
+
+
+
+display_maze("sidewinder_1",27,41,[
+[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,],
+]);
+
+
+display_maze("eller_0",27,41,[
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+]);
+
+
+
+display_maze("eller_0_3",27,41,[
+[1,2,2,2,3,1,2,2,2,2,2,3,2,2,2,2,2,2,3,0,3,0,2,2,3,0,2,2,3,3,0,2,2,2,2,2,2,2,2,2,2,],
+[2,2,1,1,0,3,1,2,3,0,2,0,2,2,2,2,3,2,2,2,1,2,2,1,1,2,2,2,2,0,2,2,3,0,2,2,2,1,2,2,2,],
+[2,1,2,2,2,2,2,2,2,3,0,1,2,1,2,1,2,2,2,2,1,2,1,2,2,2,3,1,0,1,2,1,3,1,0,2,2,2,2,1,2,],
+[2,2,2,2,1,0,2,1,3,0,2,3,3,1,2,2,2,1,0,2,1,2,2,1,3,1,0,2,2,2,2,2,2,2,2,2,2,1,3,0,2,],
+[2,2,2,2,2,2,1,2,2,2,2,2,0,2,0,2,3,2,3,2,2,2,3,2,2,2,3,2,2,2,2,2,2,2,2,1,2,2,3,0,2,],
+[2,2,1,2,2,2,3,0,3,2,3,0,2,2,2,2,0,3,0,0,2,2,2,0,2,1,2,2,3,1,3,2,2,3,0,3,0,2,2,3,2,],
+[3,3,2,2,2,2,2,3,0,0,2,2,2,3,2,2,1,3,2,2,2,1,1,3,3,1,2,2,2,2,2,0,2,2,2,2,2,3,0,2,0,],
+[0,2,3,0,1,2,2,2,2,2,2,2,2,0,3,2,2,2,2,2,1,2,2,2,1,0,0,0,2,2,3,0,2,1,3,0,2,3,0,2,2,],
+[3,0,2,2,3,0,2,3,0,2,2,2,3,0,0,3,2,0,2,3,0,2,2,3,0,2,3,2,0,2,2,2,3,1,0,3,2,3,0,2,2,],
+[0,2,2,2,3,1,1,2,2,2,2,2,3,1,2,2,1,0,2,2,3,2,3,2,2,2,2,1,1,2,2,3,1,2,2,2,1,1,2,2,2,],
+[2,2,1,2,3,3,0,2,1,3,0,1,0,2,2,2,2,3,0,2,2,2,2,0,2,1,1,2,2,0,2,0,2,2,1,0,2,2,3,0,2,],
+[2,1,2,2,0,2,2,0,2,3,0,2,2,1,1,2,2,2,2,2,2,0,1,3,0,2,2,2,1,1,3,0,2,2,2,2,3,0,3,3,2,],
+[2,2,2,2,2,3,1,2,2,2,2,2,2,2,2,2,2,2,2,2,3,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,0,],
+[2,2,2,2,3,2,2,0,3,0,2,2,2,2,3,3,2,2,3,0,2,2,2,3,2,2,1,3,0,2,2,2,2,2,2,3,3,0,2,0,2,],
+[1,2,2,2,0,2,2,3,2,2,2,1,3,1,0,0,0,2,2,3,0,2,2,2,2,2,2,3,2,2,2,2,2,3,0,0,3,0,2,2,2,],
+[2,1,3,2,3,0,2,2,2,2,1,3,0,2,2,1,1,2,2,2,2,2,3,0,0,1,2,2,0,2,1,2,2,1,1,1,2,3,0,2,2,],
+[2,2,2,0,3,2,2,0,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,1,2,3,0,2,2,1,1,2,2,2,2,2,2,2,3,1,0,],
+[3,1,0,2,0,2,3,2,2,2,3,2,2,3,0,3,0,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,3,2,1,2,0,2,2,2,2,],
+[2,2,1,3,0,2,2,2,2,3,0,1,0,2,3,0,3,0,2,3,0,2,3,2,2,2,2,2,2,3,0,2,2,0,2,2,2,2,2,2,2,],
+[1,1,2,1,2,2,2,2,2,1,2,2,2,3,0,1,2,1,3,0,2,1,2,1,1,3,2,2,3,3,3,2,3,2,2,2,2,2,1,2,2,],
+[1,2,1,2,2,1,2,0,2,2,2,3,1,3,1,2,2,1,2,3,0,2,1,2,2,2,2,2,0,0,2,2,2,0,2,2,2,3,0,2,2,],
+[2,2,2,3,2,2,2,2,3,0,2,2,2,2,3,0,2,2,2,2,3,0,1,0,2,0,3,3,2,2,0,2,2,2,2,2,2,3,2,2,2,],
+[3,3,0,2,1,1,1,0,2,2,2,0,3,2,2,1,2,2,2,2,3,0,3,0,2,3,0,0,3,0,2,2,2,2,3,0,3,2,2,2,2,],
+[0,2,2,2,2,2,3,2,2,2,2,2,0,0,2,2,1,2,3,0,2,2,2,2,3,2,2,1,0,3,3,0,2,2,2,2,0,2,0,2,2,],
+[2,2,2,2,2,2,2,2,3,2,1,2,2,3,3,0,2,2,2,2,2,3,0,2,2,2,2,3,0,2,0,2,2,3,0,3,2,2,2,3,0,],
+[2,2,2,2,2,2,2,0,0,2,3,2,3,0,0,2,2,2,1,3,0,1,2,2,0,2,3,0,3,3,2,2,2,1,2,2,0,3,0,1,2,],
+[1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,0,],
+]);
+
+
+
+display_maze("eller_0_8",27,41,[
+[3,2,3,3,3,2,3,3,3,3,1,1,3,2,3,3,1,1,3,3,2,3,3,3,1,3,3,3,1,3,3,3,3,3,3,3,3,3,3,3,2,],
+[2,3,2,2,0,1,0,2,0,3,0,3,2,3,2,2,3,3,2,0,1,2,2,3,2,0,2,3,0,2,2,2,2,2,2,2,2,2,2,0,0,],
+[2,2,2,3,0,3,3,3,2,2,2,0,2,2,2,0,2,2,3,3,0,0,2,0,1,2,0,1,0,0,2,0,2,2,2,0,0,2,3,3,2,],
+[2,0,2,3,0,2,2,2,2,3,3,0,0,2,0,3,2,2,2,3,3,0,2,2,3,3,2,2,2,3,3,2,2,2,2,1,2,2,2,0,2,],
+[1,2,2,3,2,2,2,2,2,2,3,3,2,3,2,2,2,2,2,2,3,2,2,1,2,2,3,3,0,2,2,2,2,2,3,3,2,2,2,3,2,],
+[2,2,0,2,2,2,2,2,2,2,2,2,0,0,0,2,2,2,2,2,2,0,2,3,2,0,2,2,1,0,0,2,2,2,2,2,2,2,2,2,2,],
+[1,3,2,2,2,2,2,2,2,2,2,3,3,3,2,2,2,2,0,2,3,2,2,2,3,0,2,0,3,3,1,2,2,2,0,2,2,2,2,2,0,],
+[3,2,0,2,0,2,2,2,2,2,2,0,2,2,2,2,2,3,2,2,2,2,2,2,3,2,1,0,2,3,2,2,2,3,2,2,2,0,2,3,2,],
+[2,3,2,0,2,2,2,2,2,2,2,3,2,2,2,2,2,2,0,0,2,2,2,2,2,3,3,0,2,2,2,2,2,2,2,2,1,0,0,2,2,],
+[2,2,3,3,0,2,2,2,2,2,2,2,2,2,2,2,0,2,3,2,2,2,0,2,0,2,3,2,0,2,2,2,2,2,2,3,1,3,2,2,0,],
+[0,2,2,2,2,2,2,0,2,0,2,0,2,2,2,3,0,3,2,2,2,3,0,3,2,2,2,0,3,2,2,2,2,2,0,3,2,2,2,3,2,],
+[2,2,2,3,2,2,3,2,3,0,1,2,2,0,2,1,2,2,2,2,0,3,0,2,2,2,3,0,2,2,0,2,2,3,2,2,2,0,2,2,2,],
+[1,2,2,2,2,2,2,2,3,1,2,2,0,2,3,2,2,2,2,3,2,3,2,2,0,2,3,2,0,3,2,2,2,0,2,2,3,2,2,0,2,],
+[3,2,2,2,2,0,2,0,3,2,2,3,3,2,0,2,2,2,2,0,2,2,2,3,0,2,2,1,2,2,2,2,3,2,2,0,2,2,1,0,2,],
+[2,2,2,2,3,2,1,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,3,2,2,3,2,0,2,2,2,2,0,3,2,2,2,2,3,2,],
+[0,2,0,2,2,3,2,2,2,2,2,2,3,2,2,2,2,2,3,0,2,2,2,2,2,2,2,2,2,2,0,2,3,0,2,2,2,1,2,2,2,],
+[3,2,3,2,2,2,2,2,2,2,2,0,2,2,2,2,2,0,3,2,0,2,2,2,2,2,2,3,2,2,3,0,3,0,2,2,3,2,2,2,2,],
+[2,2,0,2,0,2,2,2,2,2,1,2,2,2,2,2,3,2,2,3,2,0,2,2,2,2,0,2,2,0,3,2,1,2,2,0,2,2,2,0,2,],
+[2,3,2,2,3,2,2,2,2,3,2,2,2,0,0,0,0,0,2,2,1,0,2,2,2,3,0,2,3,2,2,0,3,2,3,2,2,2,1,0,0,],
+[2,2,2,2,2,2,2,2,2,2,2,2,3,2,2,3,2,3,2,1,1,2,2,0,2,2,3,2,2,2,3,0,2,2,2,2,2,3,3,2,2,],
+[2,2,2,2,2,2,0,2,2,2,2,2,2,2,1,0,3,2,3,3,2,2,3,2,2,0,2,2,2,2,3,0,2,2,2,0,0,2,0,3,2,],
+[0,2,2,0,2,3,0,0,2,2,2,0,2,3,3,2,2,2,2,2,2,2,0,0,0,3,0,0,2,2,1,2,2,2,3,3,2,2,2,0,2,],
+[3,0,3,2,2,2,3,3,2,2,2,3,2,2,2,2,2,2,2,2,2,3,3,2,3,1,3,2,2,2,3,0,2,2,2,2,2,3,3,2,2,],
+[1,2,2,0,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,0,2,2,2,3,2,0,0,2,2,3,2,2,0,0,2,2,2,2,0,0,],
+[3,2,3,2,2,2,0,0,2,2,2,3,3,2,0,2,2,2,2,2,3,2,0,2,2,3,1,0,2,2,0,0,2,2,3,2,2,0,3,3,0,],
+[2,2,2,0,2,3,3,0,2,2,2,2,0,3,2,2,2,2,0,2,2,1,2,2,2,3,2,3,0,1,3,2,3,2,2,2,3,2,2,3,2,],
+[0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,],
+]);
+	
+display_maze("snake",27,41,[
+[2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,],
+]);
+display_maze("spiral",27,41,[
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,],
+[3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,],
+[2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,],
+[2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,],
+[2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,],
+[2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,],
+[2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,2,],
+[2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,2,],
+[2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,2,],
+[2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,2,],
+[2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,2,],
+[2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,2,],
+[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2,],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,],
+]);
+   
+   
+display_maze("halfcycle",5,6,[
+[3,0,3,3,2,2,],
+[1,3,0,2,1,2,],
+[2,2,3,0,2,2,],
+[1,2,1,2,2,2,],
+[1,1,0,0,1,0,],
+],200);
+
+
+
+display_maze("cycle",10,12,[
+[3,1,1,2,3,1,1,1,1,2,3,2,],
+[2,3,1,0,2,3,2,3,2,2,2,2,],
+[2,1,1,1,0,2,2,2,2,1,0,2,],
+[1,1,2,3,1,0,2,2,1,1,2,2,],
+[3,2,2,2,3,1,0,2,3,2,2,2,],
+[2,2,2,2,2,3,1,0,2,2,2,2,],
+[2,1,0,2,2,1,1,2,2,2,2,2,],
+[1,1,2,2,1,1,2,2,2,2,2,2,],
+[3,1,0,1,1,2,2,2,2,1,0,2,],
+[1,1,1,1,1,0,1,0,1,1,1,0,],
+],200);
+
+
+display_maze("before_add",7,8,[
+[1,3,1,2,2,3,3,0,],
+[2,3,0,1,1,0,2,2,],
+[3,1,0,3,1,1,1,2,],
+[1,2,1,2,2,1,3,2,],
+[1,2,1,0,1,2,0,2,],
+[2,3,1,0,2,3,1,0,],
+[1,0,1,1,1,1,1,0,],
+],200);
+display_maze("after_add",7,8,[
+[1,1,1,2,2,3,3,0,],
+[2,3,0,1,1,0,2,2,],
+[1,1,0,3,0,1,1,0,],
+[1,2,1,2,2,1,3,2,],
+[1,2,1,0,1,2,0,2,],
+[2,1,1,0,2,3,1,0,],
+[1,0,1,1,1,1,1,0,],
+],200);
+
+
+display_maze("before_remove",7,8,[
+[1,3,1,2,2,3,3,0,],
+[2,3,0,1,1,0,2,2,],
+[3,1,0,3,1,1,1,2,],
+[1,2,1,2,2,1,3,2,],
+[1,2,1,0,1,2,0,2,],
+[2,3,1,0,2,3,1,0,],
+[1,0,1,1,1,1,1,0,],
+],200);
+display_maze("after_remove",7,8,[
+[3,3,1,2,2,3,3,0,],
+[2,3,2,1,1,0,2,2,],
+[3,1,0,3,1,1,1,2,],
+[1,2,1,2,2,1,3,2,],
+[1,2,1,0,1,2,3,2,],
+[2,3,1,0,2,3,1,2,],
+[1,0,1,1,1,1,1,0,],
+],200);
+
+
+display_maze("wallMaze",13,14,[
+[1,2,2,3,2,1,3,3,3,1,3,3,1,0,],
+[1,1,2,2,1,1,0,0,2,3,0,2,3,0,],
+[3,1,3,3,0,2,3,0,2,0,3,2,2,2,],
+[2,1,0,0,3,1,2,1,0,3,2,1,3,0,],
+[3,3,1,0,0,3,1,1,0,2,2,2,1,0,],
+[2,0,1,3,2,1,3,3,0,0,2,1,2,2,],
+[3,0,3,2,2,3,0,0,1,2,3,0,1,2,],
+[2,1,2,0,1,0,2,1,1,1,3,3,2,2,],
+[1,2,3,1,2,3,2,3,1,3,0,0,2,2,],
+[3,0,2,1,1,0,0,3,0,0,2,1,3,2,],
+[2,3,3,2,3,2,2,0,2,2,1,3,2,0,],
+[1,2,0,1,0,2,3,3,2,3,2,2,0,2,],
+[1,1,1,1,0,1,0,0,0,0,1,1,1,0,],
+],300);
+display_block_maze("blockMaze",26,27,[
+[1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],
+[0,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,1,0,0,0,0,],
+[1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,1,1,],
+[0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,],
+[1,1,1,1,1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,],
+[1,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,],
+[1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1,1,],
+[1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,1,0,0,],
+[1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,],
+[1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,],
+[1,0,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1,1,1,0,1,],
+[1,0,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,1,],
+[1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,],
+[1,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,],
+[1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,],
+[1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1,],
+[1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1,],
+[0,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,1,0,1,],
+[1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,1,1,],
+[1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1,],
+[1,0,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,1,1,0,1,],
+[1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,0,0,1,0,1,0,0,],
+[1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1,],
+[0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,1,],
+[1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1,],
+[0,0,0,1,1,1,0,1,1,1,1,0,1,0,1,1,1,1,1,1,0,1,0,1,1,0,0,],
+],300);
+
+      
+</script>
+

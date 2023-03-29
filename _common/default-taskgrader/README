@@ -1,0 +1,14 @@
+Ce dossier contient des fichiers pour l'utilisation du taskgrader avec les
+tasks de France-IOI.
+http://github.com/France-ioi/taskgrader
+
+=== genJson-config.py ===
+Ce fichier de config est à installer dans le dossier:
+  taskgrader/tools/genJson/config.py
+Il faut modifier la variable CFG_ROOTDIR au début de ce fichier pour pointer
+vers la copie locale du repository SVN, par exemple:
+  /home/franceioi/tasks/v01/
+
+Ce fichier de config reprend certaines conventions habituelles des tasks et
+demande à genJson d'ajouter automatiquement les dépendances classiques (via la
+variable CFG_DEF_TASKSETTINGS) présentes dans le dossier _common.

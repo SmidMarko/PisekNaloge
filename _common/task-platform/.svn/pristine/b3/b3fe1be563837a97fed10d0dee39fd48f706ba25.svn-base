@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>France IOI Task Platform</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="bower_components/submission-manager/dst/submission-manager.min.css" type="text/css" rel="stylesheet">
+    <link href="taskPlatform.css" type="text/css" rel="stylesheet"><!-- TODO :: include from bebras-modules -->
+    <link href="bower_components/bebras-modules/pemFioi/conceptViewer-1.0.css" type="text/css" rel="stylesheet">
+    <style type="text/css">*[ng-cloak] { display: none !important; }</style>
+    <script type="text/javascript" src="config.js.php"></script>
+
+    <script type="text/javascript" src="bower_components/requirejs/require.js"></script>
+    <script type="text/javascript">
+requirejs.config({
+  "waitSeconds" : 30,
+  "urlArgs": config.requireJSurlArgs,
+  "baseUrl": config.assetsUrl,
+  "paths": {
+    "ace": "bower_components/ace-builds/src-min-noconflict/ace",
+
+    "angular": "bower_components/angular/angular.min",
+    "angular-bootstrap": "bower_components/angular-bootstrap/ui-bootstrap.min",
+    "angular-bootstrap-tpls": "bower_components/angular-bootstrap/ui-bootstrap-tpls.min",
+    "angular-bind-html-compile": "bower_components/angular-bind-html-compile/angular-bind-html-compile",
+    "angular-sanitize": "bower_components/angular-sanitize/angular-sanitize.min",
+    "angular-ui-ace": "bower_components/angular-ui-ace/ui-ace.min",
+
+    "display-helper": "displayHelper",
+
+    "blockly": "bower_components/bebras-modules/ext/blockly/blockly_compressed",
+    "blockly-blocks": "bower_components/bebras-modules/ext/blockly/blocks_compressed",
+    "blockly-javascript": "bower_components/bebras-modules/ext/blockly/javascript_compressed",
+    "blockly-python": "bower_components/bebras-modules/ext/blockly/python_compressed",
+    "blockly-fr": "bower_components/bebras-modules/ext/blockly/fr",
+    "blockly-en": "bower_components/bebras-modules/ext/blockly/en",
+    "fioi-blockly": "bower_components/bebras-modules/ext/blockly-fioi/fioi-blockly.min",
+
+    "scratch": "bower_components/bebras-modules/ext/scratch/blockly_compressed_vertical",
+    "scratch-blocks-common": "bower_components/bebras-modules/ext/scratch/blocks_compressed",
+    "scratch-blocks": "bower_components/bebras-modules/ext/scratch/blocks_compressed_vertical",
+    "scratch-fixes": "bower_components/bebras-modules/ext/scratch/fixes",
+    "scratch-procedures": "bower_components/bebras-modules/ext/scratch/procedures",
+
+    "blockly-switcher": "blockly-switcher",
+    "get-locale": "get-locale",
+
+    "quickalgo-i18n": "bower_components/bebras-modules/pemFioi/quickAlgo/i18n",
+    "quickalgo-utils": "bower_components/bebras-modules/pemFioi/quickAlgo/utils",
+    "quickalgo-blockly-blocks": "bower_components/bebras-modules/pemFioi/quickAlgo/blockly_blocks",
+    "quickalgo-blockly": "bower_components/bebras-modules/pemFioi/quickAlgo/blockly_interface",
+
+    "acorn": "bower_components/bebras-modules/ext/js-interpreter/acorn",
+    "acorn-walk": "bower_components/bebras-modules/ext/acorn/walk",
+
+    "save-svg-as-png": "bower_components/saveSvgAsPng/saveSvgAsPng",
+    "webvtt": "bower_components/webvtt/parser",
+    "fioi-video-player": "bower_components/bebras-modules/pemFioi/videoPlayer-1.0",
+    "concept-viewer": "bower_components/bebras-modules/pemFioi/conceptViewer-1.0",
+    "concept-viewer-blockly": "conceptViewer_blockly",
+
+    "bootstrap": "bower_components/bootstrap/dist/js/bootstrap.min",
+    "es5-shim": "bower_components/es5-shim/es5-shim.min",
+    "fioi-editor2": "bower_components/fioi-editor2/dist/fioi-editor2",
+    "jquery": "bower_components/jquery/dist/jquery.min",
+    "lodash": "bower_components/lodash/lodash.min",
+    "platform-pr": "bower_components/pem-task/platform-pr",
+    "miniPlatform": "bower_components/pem-task/miniPlatform",
+    "raphael": "bower_components/raphael/raphael-min",
+    "jschannel": "bower_components/jschannel/src/jschannel",
+    "submission-manager": "bower_components/submission-manager/dst/submission-manager.min",
+    "SoundManager2": "bower_components/SoundManager2/script/soundmanager2-jsmin",
+    "transloadit_xhr": "bower_components/transloadit_xhr/transloadit_xhr",
+
+    "i18next": "bower_components/i18next/i18next.min",
+    "i18next-xhr-backend": "bower_components/i18next-xhr-backend/i18nextXHRBackend.min",
+    "ng-i18next": "bower_components/ng-i18next/dist/ng-i18next.min"
+  },
+  "shim": {
+    "angular": {"exports": "angular"},
+    "angular-bind-html-compile": {"deps": ["angular"]},
+    "angular-bootstrap": {"deps": ["angular"]},
+    "angular-bootstrap-tpls": {"deps": ["angular-bootstrap"]},
+    "angular-sanitize": {"deps": ["angular"]},
+    "angular-ui-ace": {"deps": ["angular", "ace"]},
+
+    // Dependencies for blockly are managed by blockly-switcher, and loaded below
+    "blockly-blocks": {"deps": ["blockly"]},
+    "blockly-switcher": {"deps": ["get-locale"]},
+
+    "scratch-blocks-common": {"deps": ["scratch"]},
+    "scratch-blocks": {"deps": ["scratch", "scratch-blocks-common"]},
+
+    "quickalgo-i18n": {"deps": ["jquery"]},
+    "quickalgo-blockly-blocks": {"deps": ["quickalgo-i18n", "quickalgo-utils", "display-helper"]},
+    "quickalgo-blockly": {"deps": ["quickalgo-blockly-blocks", "quickalgo-i18n", "quickalgo-utils"]},
+    "fioi-editor2": {"deps": ["quickalgo-blockly", "jquery", "ng-i18next"]},
+
+    "fioi-video-player": {"deps": ["jquery", "webvtt"]},
+
+    "bootstrap": {"deps": ["jquery"]},
+    "platform-pr": {"deps": ["jquery", "jschannel"], "exports": "platform"},
+    "miniPlatform": {"deps": ["platform-pr"]},
+    "submission-manager": {"deps": ["jquery", "raphael", "angular", "bootstrap", "ng-i18next"]},
+    "transloadit_xhr": {"deps": ["jquery"]},
+
+    "i18next-xhr-backend": {"deps": ["i18next"]},
+    "ng-i18next": {"deps": ["i18next", "angular", "angular-sanitize"]}
+  }
+});
+require([
+  'angular', 'angular-bootstrap', 'angular-bootstrap-tpls', 'angular-ui-ace',
+  'es5-shim', 'jquery', 'lodash', 'raphael',
+  'jschannel', 'platform-pr', 'angular-bind-html-compile',
+  'i18next', 'acorn',
+  'miniPlatform', 'get-locale', 'blockly-switcher'
+], function (angular) {
+  // TODO :: actual dependency tree
+  // Order of JS scripts loading; load blocklySwitcher dependencies first
+  // TODO :: optimize that a lot, really
+  var scripts = window.blocklySwitcher.dependencies.concat([
+    ["animation",
+     "commonFramework/modelsManager/modelsManager",
+     "ng-i18next",
+     "submission-manager",
+     "acorn-walk"],
+     "shared/models",
+    ["commonFramework/sync/syncQueue"],
+    "taskController",
+    ["fioi-video-player",
+    "concept-viewer"],
+    ["pem-api",
+     "limits/directive",
+     "samples/directive",
+     "hints/directive",
+     "selectLang",
+     "showSource",
+     "concept-viewer-blockly"],
+    "miniPlatform",
+  ]);
+  function loadNext () {
+    if (scripts.length > 0) {
+      if(typeof scripts[0] === "string") {
+        return require([scripts.shift()], loadNext);
+      } else {
+        return require(scripts.shift(), loadNext);
+      }
+    }
+    angular.element(document).ready(function () {
+      angular.bootstrap(document, ['pemTask'], {strictDi: true});
+    });
+  }
+
+  require(['i18next'], function(i18next) {
+    window.i18next = i18next;
+    getLocale.getAngularLocale(loadNext);
+  });
+
+});
+    </script>
+    <style>
+      .readOnlySource .ace_cursor {
+         border-left:0px;
+      }
+      body {
+        margin-top:20px;
+        width: 764px;
+        margin-right: auto;
+        margin-left: auto;
+      }
+      #choose-view {
+        margin-left:auto;
+        margin-right: auto;
+        margin-bottom: 40px;
+        font-size:14pt;
+      }
+      #sourcesEditor {
+         margin-bottom:20px;
+      }
+      #testsEditor {
+         margin-bottom:20px;
+      }
+      #submission {
+         margin-top: 25px;
+      }
+      .hint {
+        margin-bottom: 10px;
+        margin-top: 20px;
+      }
+      .glyphicon.spinning {
+        animation: spin 2.3s infinite linear;
+        transform-origin: 48% 50%;
+      }
+      .readOnlySource {
+         margin-left: 30px;
+         margin-top:20px;
+         margin-bottom:20px;
+      }
+      .buttons-set {
+        margin-top:10px;
+        width:100%;
+        display:flex;
+        justify-content: center;
+      }
+      .btn-default {
+        margin-left:2px;
+        margin-right:2px;
+      }
+      .btn-info {
+        margin-left:2px;
+        margin-right:2px;
+      }
+      @keyframes spin {
+        from { transform: scale(1) rotate(0deg); }
+        to { transform: scale(1) rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body ng-controller="taskController" ng-class="bodyClass">
+    <div ng-hide="loadComplete" class="jumbotron text-center">
+        <span style="font-size: 4em;" class="glyphicon glyphicon-refresh glyphicon-animate-spin"></span>
+    </div>
+    <div id="task" ng-cloak ng-show="loadComplete">
+       <h1 ng-bind-html="taskTitle"></h1>
+       <div dynamic-compile="taskContent"></div>
+    </div>
+    <div id="editor" ng-cloak ng-show="loadComplete">
+      <div id="sourcesEditor" ng-if="!tm_task.bTestMode">
+        <div fioi-editor2="{tabset: 'sources'}"></div>
+      </div>
+      <div id="testSourcesEditor" ng-if="tm_task.bTestMode">
+        <div fioi-editor2="{tabset: 'testSources'}"></div>
+      </div>
+      <div class="alert" ng-class="sourceCommentStyle" ng-show="sourceComment" ng-bind-html="sourceComment"></div>
+      <div class="panel panel-default" ng-show="tm_task.bUserTests">
+        <div class="panel-heading" ng-click="togglePanel('userTests')" ng-class="panels.userTests ? 'panel-opened' : 'panel-collapsed'" ng-i18next="validate_test_heading"></div>
+        <div class="panel-body" ng-show="panels.userTests" style="padding-left: 3px; padding-right: 3px;">
+          <div id="testsEditor">
+            <div class="text-center" ng-i18next="validate_test_description"></div>
+            <div fioi-editor2="{tabset:'tests'}"></div>
+          </div>
+          <div id="upper-buttons" class="buttons-set" ng-show="tm_task.bIsEvaluable">
+            <button ng-click="runCurrentTest();" ng-disabled="validateButtonDisabled" class="btn btn-default" ng-i18next="validate_test_current"></button>
+            <button ng-click="runAllTests();" ng-disabled="validateButtonDisabled" class="btn btn-default" ng-i18next="validate_test_all"></button>
+          </div>
+          <div ng-show="hasExternalTest();" class="buttons-set">
+            <br>
+            <input type="checkbox" ng-model="localUserTests"><span ng-i18next="validate_test_local"></span>
+          </div>
+        </div>
+      </div>
+      <div id="externalTest" ng-if="hasExternalTest();" class="panel panel-default">
+        <div class="panel-heading" ng-if="externalExamples" ng-click="togglePanel('externalTests')" ng-class="panels.externalTests ? 'panel-opened' : 'panel-collapsed'" ng-i18next="local_test_heading"></div>
+        <div class="panel-heading" ng-if="!externalExamples" ng-click="togglePanel('externalTests')" ng-class="panels.externalTests ? 'panel-opened' : 'panel-collapsed'" ng-i18next="local_test_heading_user"></div>
+        <div class="panel-body" ng-show="panels.externalTests && !externalTestUrl && externalExamples">
+            <button ng-click="openExternalTest()" class="btn btn-default" ng-i18next="local_test_button"></button>
+            <p ng-i18next="local_test_description"></p>
+        </div>
+        <div class="panel-body" ng-show="panels.externalTests && !externalTestUrl && !externalExamples">
+            <p ng-i18next="local_test_description_user"></p>
+        </div>
+        <div class="panel-body" ng-if="externalTestUrl" ng-show="panels.externalTests" style="padding: 10px 2px;">
+            <iframe id="adapter-iframe" style="height: 600px; width: 100%; border: 0px;" ng-if="externalTestUrl" ng-src="{{ externalTestUrl }}"></iframe>
+        </div>
+      </div>
+      <div id="lower-buttons" class="buttons-set">
+        <button ng-click="validateAnswer();" ng-if="tm_task.bIsEvaluable" ng-disabled="validateButtonDisabled" class="btn btn-info" id="validate-button" ng-i18next="validate"></button>
+      </div>
+      <p ng-if="validateMsg != ''" class="text-center {{ validateMsgClass }}" id="validate-msg"><span ng-i18next="{{ validateMsg }}"></span><span ng-if="validateErr != ''"> {{ validateErr }}</span></p>
+      <div class="buttons-set" ng-if="tm_task.sDefaultEditorMode == 'expert'">
+        <a target="_self"  ng-href="remote/getTokenFile.php?sToken={{sToken}}&sPlatform={{sPlatform}}&taskId={{taskId}}" style="margin-top:5px;margin-right:3px;">
+          <!--<button class="btn btn-info">-->
+          <span ng-i18next="validate_cmdline"></span>
+          <!--</button>-->
+        </a>
+        <a target="_blank" style="margin-top:5px;" href="/remote/help.html">(?)</a>
+      </div>
+    </div>
+    <div id="submission" ng-cloak ng-show="loadComplete">
+      <div id="submission-visualization"></div>
+      <div ng-if="!submission" ng-i18next="submission_none"></div>
+      <div ng-if="submission" ng-controller="submissionController" ng-include="'submission-manager/submission.html'"></div>
+    </div>
+    <div id="solution" dynamic-compile="solutionContent" ng-cloak ng-show="loadComplete">
+    </div>
+    <div id="hints" ng-cloak ng-show="loadComplete">
+       <div task-hints ng-if="tm_task && tm_task.nbHintsTotal"></div>
+    </div>
+    <div class="modal" id="adapterPopupModal" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 ng-i18next="local_test_ok"></h4>
+          </div>
+          <div class="modal-body">
+            <div ng-i18next="local_test_ok_description"></div>
+            <div>
+              <button class="btn btn-primary" ng-i18next="validate" ng-click="adapterValidateAnswer();" data-dismiss="modal"></button>
+              <button class="btn btn-default" ng-i18next="cancel" data-dismiss="modal"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
