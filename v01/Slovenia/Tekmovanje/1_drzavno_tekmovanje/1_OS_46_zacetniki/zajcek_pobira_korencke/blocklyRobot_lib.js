@@ -1,4 +1,4 @@
-//TODO: Check _common/modules/pemFioi/blocklyRobot_lib-1.0.0.js and blocklyRobot_lib-1.0.1-dev.js!!!
+//TODO: Check common/modules/pemFioi/blocklyRobot_lib-1.0.0.js and blocklyRobot_lib-1.0.1-dev.js!!!
 //generatedBlocks
 var getContext = function(display, infos) {
 	var localLanguageStrings = {
